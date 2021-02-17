@@ -7,13 +7,17 @@ The port is pre-assigned as 8084 and 8086.
 Required Python3
 
 How to run the server:\
-Open up the terminal and run:
+  1. First open up the terminal and run the server:
 ```
 python server.py
 ```
+  2. Then open a new terminal and run the client:
+ ```
+ python client.py
+ ```
+ Follow the instruction in the terminal to use the chatroom application.
+  3. You can open multiple clients and communicate with each clients.
 
-python server.py\
-python client.py
 
 
 
