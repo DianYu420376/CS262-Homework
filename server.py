@@ -1,140 +1,282 @@
+import queue
 import socket
+import threading
+from enum import Enum
+import time
 import select
+import sys
 
-HEADER_LENGTH = 10
-
-IP = "127.0.0.1"
-PORT = 1234
-
-# Create a socket
-# socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX
-# socket.SOCK_STREAM - TCP, conection-based, socket.SOCK_DGRAM - UDP, connectionless, datagrams, socket.SOCK_RAW - raw IP packets
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# SO_ - socket option
-# SOL_ - socket option level
-# Sets REUSEADDR (as a socket option) to 1 on socket
-server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-# Bind, so server informs operating system that it's going to use given IP and port
-# For a server using 0.0.0.0 means to listen on all available interfaces, useful to connect locally to 127.0.0.1 and remotely to LAN interface IP
-server_socket.bind((IP, PORT))
-
-# This makes server listen to new connections
-server_socket.listen()
-
-# List of sockets for select.select()
-sockets_list = [server_socket]
-
-# List of connected clients - socket as a key, user header and name as data
-clients = {}
-
-print(f'Listening for connections on {IP}:{PORT}...')
-
-# Handles message receiving
-def receive_message(client_socket):
-
-    try:
-
-        # Receive our "header" containing message length, it's size is defined and constant
-        message_header = client_socket.recv(HEADER_LENGTH)
-
-        # If we received no data, client gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)
-        if not len(message_header):
-            return False
-
-        # Convert header to int value
-        message_length = int(message_header.decode('utf-8').strip())
-
-        # Return an object of message header and message data
-        return {'header': message_header, 'data': client_socket.recv(message_length)}
-
-    except:
-
-        # If we are here, client closed connection violently, for example by pressing ctrl+c on his script
-        # or just lost his connection
-        # socket.close() also invokes socket.shutdown(socket.SHUT_RDWR) what sends information about closing the socket (shutdown read/write)
-        # and that's also a cause when we receive an empty message
-        return False
-
-while True:
-
-    # Calls Unix select() system call or Windows select() WinSock call with three parameters:
-    #   - rlist - sockets to be monitored for incoming data
-    #   - wlist - sockets for data to be send to (checks if for example buffers are not full and socket is ready to send some data)
-    #   - xlist - sockets to be monitored for exceptions (we want to monitor all sockets for errors, so we can use rlist)
-    # Returns lists:
-    #   - reading - sockets we received some data on (that way we don't have to check sockets manually)
-    #   - writing - sockets ready for data to be send thru them
-    #   - errors  - sockets with some exceptions
-    # This is a blocking call, code execution will "wait" here and "get" notified in case any action should be taken
-    read_sockets, _, exception_sockets = select.select(sockets_list, [], sockets_list)
+lock = threading.Lock()
+header_size = 10
 
 
-    # Iterate over notified sockets
-    for notified_socket in read_sockets:
+class Command(Enum):
+    # INITIA = 0
+    LOGIN = 1
+    LOGOUT = -1
+    SENDMSG = 2
+    REGISTER = 3
+    LIST_USERS = 4
+    DELETE_ACCOUNT = 5
 
-        # If notified socket is a server socket - new connection, accept it
-        if notified_socket == server_socket:
 
-            # Accept new connection
-            # That gives us new socket - client socket, connected to this given client only, it's unique for that client
-            # The other returned object is ip/port set
-            client_socket, client_address = server_socket.accept()
+# conn.recv(2048)
+# msg= "1 username password"
+#
+# conn.send(f"{len(msgs)}:<{header_size}}".encode('utf-8'))
+# message_length = int(conn.recv(header_size).decode('utf-8').strip())
+# msgfromclient: length(10 bytes), "command\ndata1\ndata2"
+# 1. login username password
+# 2. sendmessage username msgs
+# 4. list_users
+# 5. delete username password
+# msgtoclient: length(10bytes) "code\ninfo"
+class MSG_CODE(Enum):
+    FAILED = -1
+    SUCCEED = 0
 
-            # Client should send his name right away, receive it
-            user = receive_message(client_socket)
 
-            # If False - client disconnected before he sent his name
-            if user is False:
-                continue
+class Server_thread(threading.Thread):
+    def __init__(self, connection):
+        threading.Thread.__init__(self)
+        self.conn = connection
+        # self.lock = threading.Lock()
+        # self.user_table = user_table
+        # print(users['sf'])
+        self.username = ''
 
-            # Add accepted socket to select.select() list
-            sockets_list.append(client_socket)
+    def run(self):
+        logged_in = 0
+        while True:
+            while not logged_in:
+                logged_in = self.initialize()
+                if logged_in == -2:
+                    print(f'user {self.username} seems shutdown the connection, disconncting thread')
+                    login_status[self.username] = 0
+                    self.conn.shutdown(2)
+                    self.conn.close()
+                    sys.exit()
+            status = self.receive_message()
+            if status == -1:
+                print(f'user {self.username} seems shutdown the connection, disconncting thread')
+                login_status[self.username] = 0
+                sys.exit()
+            elif status == 2:
+                login_status[self.username] = 0
+                logged_in = 0;
 
-            # Also save username and username header
-            clients[client_socket] = user
+    def send_message(self):
+        pass
 
-            print('Accepted new connection from {}:{}, username: {}'.format(*client_address, user['data'].decode('utf-8')))
-
-        # Else existing socket is sending a message
+    # Initialize connection to login or create account for user
+    def initialize(self):
+        header = self.conn.recv(header_length)
+        if not len(header):
+            print("DEBUG: initialization failed")
+            return -2
+        print(header.decode('utf-8').strip())
+        message_length = int(header.decode('utf-8').strip())
+        msg = self.conn.recv(message_length).decode('utf-8')
+        msgs = msg.split('\n')
+        print(msgs)
+        try:
+            command = int(msgs[0])
+        except ValueError:
+            print("command received is not integer, conversion failed")
+            return -1
+        # print(f'DEBUG: Command Received:{command},LOGIN_Command:{Command.LOGIN.value}')
+        if command != Command.LOGIN.value and command != Command.REGISTER.value:
+            msg = "-1\nInvalid Command, you can only choose to login or register".encode('utf-8')
+            data = f"{len(msg):<{header_length}}".encode('utf-8') + msg
+            self.conn.send(data)
+            # print("Invalid Command")
         else:
+            username = msgs[1].strip()
+            password = msgs[2].strip()
+            if command == Command.LOGIN.value:
+                # print(f'DEBUG: start login {username} {password}')
+                # print(f"DEBUG: {user_table}")
+                if username in user_table and user_table[username] == password:
+                    code = MSG_CODE.SUCCEED.value
+                    msg = f"{code}\nSuccessful Login".encode('utf-8')
+                    data = f"{len(msg):<{header_length}}".encode('utf-8') + msg
+                    self.conn.send(data)
+                    login_status[username] = 1
+                    self.username = username
+                    # print("Debug: login successful")
+                    socket_status[self.conn.fileno()] = 1
+                    return 1
+                else:
+                    code = MSG_CODE.FAILED.value
+                    msg = f"{code}\nInvalid Login, credential doesn't exist or password invalid".encode('utf-8')
+                    data = f"{len(msg):<{header_length}}".encode('utf-8') + msg
+                    self.conn.send(data)
+                    # print("Debug: login failed")
+                    return 0
+            elif command == Command.REGISTER.value:
+                lock.acquire()
+                if username in user_table:
+                    lock.release()
+                    code = MSG_CODE.FAILED.value
+                    msg = f"{code}\nThis username has been used".encode('utf-8')
+                    data = f"{len(msg):<{header_length}}".encode('utf-8') + msg
+                    self.conn.send(data)
+                    return 0
+                else:
+                    user_table[username] = password
+                    lock.release()
+                    code = MSG_CODE.SUCCEED.value
+                    message_queue[username] = queue.Queue()
+                    msg = f"{code}\nSuccessful Created and logged in".encode('utf-8')
+                    data = f"{len(msg):<{header_length}}".encode('utf-8') + msg
+                    self.conn.send(data)
+                    login_status[username] = 1
+                    self.username = username
+                    socket_status[self.conn.server_conn.fileno()] = 1
+                    print(f'DEBUG: User:{username} has been created')
+                    return 1
 
-            # Receive message
-            message = receive_message(notified_socket)
+    def receive_message(self):
+        try:
+            header = self.conn.recv(header_length)
+        except OSError as e:
+            return -1
 
-            # If False, client disconnected, cleanup
-            if message is False:
-                print('Closed connection from: {}'.format(clients[notified_socket]['data'].decode('utf-8')))
+        # if the received header is empty, than the socket had been closed
+        if not len(header):
+            return -1
+        message_length = int(header.decode('utf=8').strip())
+        data = self.conn.recv(message_length).decode('utf-8').strip().split('\n')
+        command = data[0]
+        command = int(command)
+        if command not in Command._value2member_map_:
+            data = self.pack_msg(-1, f'invalid command:{command}')
+            self.conn.send(data)
+        else:
+            if command == Command.LIST_USERS.value:
+                msg = ''.join('%s ' % user for user in user_table)
+                data = self.pack_msg(0, msg)
+                self.conn.send(data)
+                return 0
+            elif command == Command.SENDMSG.value:
+                recipient = data[1]
+                msg = data[2]
+                # if the recipient is invalid
+                if recipient not in user_table:
+                    data = self.pack_msg(-1, "invalid recipient")
+                    self.conn.send(data)
+                    print("DEBUG: Invalid Recipient")
+                    return 0
+                else:
+                    lock.acquire()
+                    if recipient not in message_queue.keys():
+                        message_queue[recipient] = queue.Queue()
+                    message_queue[recipient].put(f'{self.username}:{msg}')
+                    lock.release()
+                    data = self.pack_msg(0, "Sent to recipient")
+                    self.conn.send(data)
+                    return 0
+            elif command == Command.DELETE_ACCOUNT.value:
+                if len(data) != 3:
+                    data = self.pack_msg(-1, "Invalid deletion detected")
+                    self.conn.send(data)
+                    return 0
+                username = data[1]
+                password = data[2]
+                if username in user_table and user_table[username] == password:
+                    lock.acquire()
+                    del user_table[username]
+                    login_status[username] = 0
+                    lock.release()
+                    data = self.pack_msg(0, "account deleted")
+                    self.conn.send(data)
+                    print(f'user:{username} has been deleted')
+                    return 2
+                else:
+                    data = self.pack_msg(-1, "Invalid credential, deletion failed")
+                    self.conn.send(data)
+                    return 0
+            elif command == Command.LOGOUT.value:
+                print(f'User:{self.username} is logging out')
+                data = self.pack_msg(0,"Logging out")
+                self.conn.send(data)
+                return 2
 
-                # Remove from list for socket.socket()
-                sockets_list.remove(notified_socket)
 
-                # Remove from our list of users
-                del clients[notified_socket]
 
-                continue
+    def pack_msg(self,code, msg):
+        msg_encoded = f"{code}\n{msg}".encode('utf-8')
+        data = f"{len(msg_encoded):<{header_length}}".encode('utf-8') + msg_encoded
+        return data
 
-            # Get user by notified socket, so we will know who sent the message
-            user = clients[notified_socket]
 
-            print(f'Received message from {user["data"].decode("utf-8")}: {message["data"].decode("utf-8")}')
+def pack_msg(code, msg):
+    msg_encoded = f"{code}\n{msg}".encode('utf-8')
+    data = f"{len(msg_encoded):<{header_length}}".encode('utf-8') + msg_encoded
+    return data
 
-            # Iterate over connected clients and broadcast message
-            for client_socket in clients:
 
-                # But don't sent it to sender
-                if client_socket != notified_socket:
+class Message_relay_thread(threading.Thread):
+    def __init__(self, active_conn,relay_socket):
+        threading.Thread.__init__(self)
+        self.socket = relay_socket
+        self.active_conn = active_conn
 
-                    # Send user and message (both with their headers)
-                    # We are reusing here message header sent by sender, and saved username header send by user when he connected
-                    client_socket.send(user['header'] + user['data'] + message['header'] + message['data'])
+    def run(self):
+        while self.active_conn.fileno() != -1 and socket_status[self.active_conn.fileno()] == 0:
+            time.sleep(0.1)
+        if self.active_conn.fileno() == -1:
+            print("DEBUG: Relay thread ends before connection")
+            sys.exit()
+        # print("Logged in Detected, RELAY DEBUG: Running relay thread")
+        self.socket.listen(1)
+        conn, addr = self.socket.accept()
+        # print("RELAY DEBUG: Connection established")
+        message_length = int(conn.recv(header_length).decode("utf-8").strip())
+        username = conn.recv(message_length).decode("utf-8").strip()
+        print(f'start relay thread for user: {username}')
+        while self.active_conn.fileno() != -1:
+            #if there is the connection is active but login not finished yet
+            if login_status[username] == 1:
+                try:
+                    msg = message_queue[username].get(block=False)
+                    data = pack_msg(0,msg)
+                    conn.send(data)
+                except queue.Empty:
+                    time.sleep(1)
+                # finally:
+            time.sleep(1)
+        print(f'User:{username} is disconnected, relay thread exits')
+        sys.exit()
+command_length = 10
+header_length = 10
+user_table = {'tester': 'abc123','abc':'abc'}
+login_status = {}
+buffer = {}
+lock = threading.Lock()
+ip = '127.0.0.1'
+port = 8084
+relay_port = 8086
+max_connection = 10
+message_queue = {}
+for key in user_table:
+    message_queue[key] = queue.Queue()
+sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+relay_sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sk.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+relay_sk.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sk.bind((ip, port))
+relay_sk.bind((ip, relay_port))
+print("Main Thread started")
+socket_status  = {}
+while True:
+    sk.listen()
+    server_conn, server_addr = sk.accept()
+    socket_status[server_conn.fileno()] = 0
+    server_thread = Server_thread(server_conn)
+    server_thread.start()
+    relay_thread = Message_relay_thread(server_conn, relay_sk)
+    relay_thread.start()
 
-    # It's not really necessary to have this, but will handle some socket exceptions just in case
-    for notified_socket in exception_sockets:
-
-        # Remove from list for socket.socket()
-        sockets_list.remove(notified_socket)
-
-        # Remove from our list of users
-        del clients[notified_socket]
+# try to look up user table for logging
+# return 0 if succeed, -1 if failed
