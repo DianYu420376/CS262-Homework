@@ -37,12 +37,37 @@ Commands listed above are supported in our chatroom app. The client interface wi
 
 ### Communication Protocol
 Messages sent between the server and clients follows the following structure:  
-```
 ++++++++++++++++++++  
 | HEADER | CMD-CODE | MSGS |  
 ++++++++++++++++++++    
+where HEADER contains the length of the total message (including the command code), and is padded to make sure it is of exact length set to `header_length = 10` in our implementation. CMD-CODE stand for the command code taking value from -1 to 5. Then followed by the text messages MSGS need to be sent. Command code and messages are separated by the `'\n'` deliminator. 
+
+As for parsing the messages, the parser first receive the HEADER to get the total message length, then the parser will receive the message with buffer size equals to the message length.
+
+For review's interest, the packing and unpacking function of the messages are as follows:
+```python
+def pack_msg(code, msg): # Pack the message
+    msg_encoded = f"{code}\n{msg}".encode('utf-8')
+    msg_packed = f"{len(msg_encoded):<{header_length}}".encode('utf-8') + msg_encoded
+    return msg_packed
+
+def get_response(socket): # Unpack the message
+    message_length = int(socket.recv(header_length).decode('utf-8').strip())
+    msg = socket.recv(message_length).decode('utf-8')
+    msgs = msg.split('\n')
+    # print(msgs)
+    try:
+        msg_code = int(msgs[0])
+    except ValueError:
+        msg = "msg_code received is not integer, conversion failed"
+        msg_code = -1
+        return msg_code, msg
+    if len(msgs) == 2:
+        msg = msgs[1]
+    else:
+        msg = msgs[1:]
+    return msg_code, msg
 ```
-where HEADER contains the length of the total message (including the command code), and is padded to make sure it is of exact length `header_length = 10`
 
 
 
