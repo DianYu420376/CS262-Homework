@@ -44,7 +44,7 @@ where HEADER contains the length of the total message (including the command cod
 
 As for parsing the messages, the parser first receive the HEADER to get the total message length, then the parser will receive the message with buffer size equals to the message length.
 
-For review's interest, the packing and unpacking function of the messages are as follows:
+For review's interest, the packing and unpacking function of the messages are implemented as follows:
 ```python
 def pack_msg(code, msg): # Pack the message
     msg_encoded = f"{code}\n{msg}".encode('utf-8')
