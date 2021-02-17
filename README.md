@@ -6,7 +6,7 @@ This assignment is complished with multi-threaded server and clients. Each conne
 The port is pre-assigned as 8084 and 8086. 
 Required Python3
 
-How to run the server:\n
+How to run the server: \
   1. First open up the terminal and run the server:
 ```
 python server.py
@@ -16,7 +16,7 @@ python server.py
  ```
  python client.py
  ```
- Follow the instruction in the terminal to use the chatroom application.\n 
+ Follow the instruction in the terminal to use the chatroom application. \
   3. You can open multiple clients and communicate between them.
 
 
