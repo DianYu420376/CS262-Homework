@@ -12,11 +12,12 @@ How to run the server:\
 python server.py
 ```
   2. Then open a new terminal and run the client:
+  
  ```
  python client.py
  ```
- Follow the instruction in the terminal to use the chatroom application.\ 3. You can open multiple clients and communicate with each clients.
-
+ Follow the instruction in the terminal to use the chatroom application.\ 
+  3. You can open multiple clients and communicate between them.
 
 
 
