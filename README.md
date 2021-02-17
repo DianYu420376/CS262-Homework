@@ -7,7 +7,7 @@ The port is pre-assigned as 8084 and 8086.
 Required Python3
 
 Run:
-python server.py
+python server.py\
 python client.py
 
 
