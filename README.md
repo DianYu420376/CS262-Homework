@@ -39,7 +39,7 @@ Commands listed above are supported in our chatroom app. The client interface wi
 Messages sent between the server and clients follows the following structure:
 
 
-__________________________  
+_ __ __ __ __ __ __ __   
 | HEADER | CMD-CODE | MSGS |  
 __________________________
 
