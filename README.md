@@ -21,6 +21,13 @@ python server.py
  
   3. You can open multiple clients and communicate between them.
 
+When a client is connected to the server, it will receive the following welcome message:
+```
+Welcome! Connected to the server.\nThis is a chat room app. We support the following command listed below with its corresponding command code:
+                            \n 0. Help\n 1. Log in\n 2. Send message to other users\n 3. Register\n 4. List all registered users
+                            \n 5. Delete account\n -1. Log out
+```
+
 
 
 
