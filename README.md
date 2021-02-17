@@ -23,15 +23,17 @@ python server.py
 
 When a client is connected to the server, it will receive the following welcome message:
 ```
-Welcome! Connected to the server.\nThis is a chat room app. We support the following command listed below with its corresponding command code:
+Welcome! Connected to the server.
+This is a chat room app. We support the following command listed below with its corresponding command code:
 0. Help
 1. Log in 
 2. Send message to other users
 3.  Register
 4.  List all registered users
-5.  5. Delete account
+5.  Delete account
 -1. Log out
 ```
+Commands listed above are supported in our chatroom app. The client interface will ask the client to select from the above command codes and then ask client to provide further information for the command (e.g. the client needs to provide username and password for logging in or registration).
 
 
 
