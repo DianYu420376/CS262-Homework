@@ -22,7 +22,7 @@ python server.py
   3. You can open multiple clients and communicate between them.
 
 When a client is connected to the server, it will receive the following welcome message:
-```python
+```
 Welcome! Connected to the server.\nThis is a chat room app. We support the following command listed below with its corresponding command code:
 0. Help
 1. Log in 
