@@ -36,7 +36,13 @@ This is a chat room app. We support the following command listed below with its 
 Commands listed above are supported in our chatroom app. The client interface will ask the client to select from the above command codes and then ask client to provide further information for the command (e.g. the client needs to provide username and password for logging in or registration).
 
 ### Communication Protocol
+Messages sent between the server and clients follows the following structure:
 
+++++++++++++++++++++++++++
+HEADER | CMD-CODE | MSGS |
+++++++++++++++++++++++++++
+
+where the header
 
 
 
