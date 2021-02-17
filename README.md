@@ -8,18 +8,18 @@ Required Python3
 
 ### How to run the server: 
 
-  1. First open up the terminal and run the server:
+  #### 1. First open up the terminal and run the server:
 ```
 python server.py
 ```
-  2. Then open a new terminal and run the client:
+  #### 2. Then open a new terminal and run the client:
   
  ```
  python client.py
  ```
  Follow the instruction in the terminal to use the chatroom application. 
  
-  3. You can open multiple clients and communicate between them.
+  #### 3. You can open multiple clients and communicate between them.
 
 When a client is connected to the server, it will receive the following welcome message:
 ```
