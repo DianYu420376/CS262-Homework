@@ -6,7 +6,7 @@ This assignment is complished with multi-threaded server and clients. Each conne
 The port is pre-assigned as 8084 and 8086. 
 Required Python3
 
-How to run the server: 
+### How to run the server: 
 
   1. First open up the terminal and run the server:
 ```
@@ -34,6 +34,8 @@ This is a chat room app. We support the following command listed below with its 
 -1. Log out
 ```
 Commands listed above are supported in our chatroom app. The client interface will ask the client to select from the above command codes and then ask client to provide further information for the command (e.g. the client needs to provide username and password for logging in or registration).
+
+### Communication Protocol
 
 
 
