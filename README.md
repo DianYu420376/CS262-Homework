@@ -39,7 +39,9 @@ Commands listed above are supported in our chatroom app. The client interface wi
 Messages sent between the server and clients follows the following structure:
 
 ++++++++++++++++++++++++++
+
 HEADER | CMD-CODE | MSGS |
+
 ++++++++++++++++++++++++++
 
 where the header
