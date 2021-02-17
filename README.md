@@ -8,9 +8,9 @@ Required Python3
 
 How to run the server:\
 Open up the terminal and run:
-'''
+```
 python server.py
-'''
+```
 
 python server.py\
 python client.py
