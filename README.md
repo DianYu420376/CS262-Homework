@@ -1,18 +1,18 @@
 # CS262-Hw1-Chatroom
-NOTES: Sorry, we just realized a last minute problem that crashes the relay functionality, we need to fix that ASAP. 
 
 CS262 programming homework 1
-This assignment is complished with multi-threaded server and clients. Each connection would be managed by a main thread for command communication and another thread to relay the message.
+This assignment is complished with multi-threaded server and clients. Each connection would be managed by a main thread for command communication and another thread to relay the message. ALL functions have been tested and should work correctly with multiple clients chatting with each other. You can chat with online/offline users. Once offline users logged in, all messages should be relayed in one second delay. 
+
 The port is pre-assigned as 8084 and 8086. 
 Required Python3. You have to make sure your port 8084 and 8086 is available if you meet any connection issue.
 
-There are already two tester users added, the username:password for them are: tester:abc123 abc:abc
+#### There are already two tester users added, the username:password for them are: tester:abc123 abc:abc
 
 Keep in mind that you can only send messages to exist users. 
 
 Notebook is appened at the end of this README
 
-### How to run the server: 
+### How to run/test the server: 
 
   #### 1. First open up the terminal and run the server:
 ```
