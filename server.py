@@ -6,10 +6,13 @@ import time
 import select
 import sys
 
+# A Mutex lock is implemented with stock threading lock to prevent from race condition in message buffer,
+# login status variable.
 lock = threading.Lock()
 header_size = 10
 
 
+# The Enum is defined here to define Command code received from client.
 class Command(Enum):
     # INITIA = 0
     LOGIN = 1
@@ -20,6 +23,7 @@ class Command(Enum):
     DELETE_ACCOUNT = 5
 
 
+# Demo schematic for internal documentation
 # conn.recv(2048)
 # msg= "1 username password"
 #
@@ -31,25 +35,27 @@ class Command(Enum):
 # 4. list_users
 # 5. delete username password
 # msgtoclient: length(10bytes) "code\ninfo"
+
+# This enum defines the message code from server to client
 class MSG_CODE(Enum):
     FAILED = -1
     SUCCEED = 0
 
 
+# This Server thread would be main thread to maintain all the commands from client.
 class Server_thread(threading.Thread):
     def __init__(self, connection):
         threading.Thread.__init__(self)
         self.conn = connection
-        # self.lock = threading.Lock()
-        # self.user_table = user_table
-        # print(users['sf'])
         self.username = ''
 
     def run(self):
         logged_in = 0
         while True:
+            # If the user is not logged in, keep this until logged in
             while not logged_in:
                 logged_in = self.initialize()
+                # If thread can't hear anything from client, shutdown socket, exit this thread
                 if logged_in == -2:
                     print(f'user {self.username} seems shutdown the connection, disconncting thread')
                     login_status[self.username] = 0
@@ -69,6 +75,7 @@ class Server_thread(threading.Thread):
         pass
 
     # Initialize connection to login or create account for user
+    # return 0 for succeed, otherwise failed
     def initialize(self):
         header = self.conn.recv(header_length)
         if not len(header):
@@ -136,6 +143,7 @@ class Server_thread(threading.Thread):
                     print(f'DEBUG: User:{username} has been created')
                     return 1
 
+    # This function would handle all commands from client after logging in
     def receive_message(self):
         try:
             header = self.conn.recv(header_length)
@@ -153,11 +161,13 @@ class Server_thread(threading.Thread):
             data = self.pack_msg(-1, f'invalid command:{command}')
             self.conn.send(data)
         else:
+            # List all users to sent messages
             if command == Command.LIST_USERS.value:
                 msg = ''.join('%s ' % user for user in user_table)
                 data = self.pack_msg(0, msg)
                 self.conn.send(data)
                 return 0
+            # Client wants to send message to someone
             elif command == Command.SENDMSG.value:
                 recipient = data[1]
                 msg = data[2]
@@ -176,6 +186,7 @@ class Server_thread(threading.Thread):
                     data = self.pack_msg(0, "Sent to recipient")
                     self.conn.send(data)
                     return 0
+            # Client wants to delete current user, password has to be re-verified for security
             elif command == Command.DELETE_ACCOUNT.value:
                 if len(data) != 3:
                     data = self.pack_msg(-1, "Invalid deletion detected")
@@ -196,15 +207,15 @@ class Server_thread(threading.Thread):
                     data = self.pack_msg(-1, "Invalid credential, deletion failed")
                     self.conn.send(data)
                     return 0
+            # Client wants to logout, log clients out
             elif command == Command.LOGOUT.value:
                 print(f'User:{self.username} is logging out')
-                data = self.pack_msg(0,"Logging out")
+                data = self.pack_msg(0, "Logging out")
                 self.conn.send(data)
                 return 2
 
-
-
-    def pack_msg(self,code, msg):
+    # Standard msg packing function to pack code and msgs by protocol
+    def pack_msg(self, code, msg):
         msg_encoded = f"{code}\n{msg}".encode('utf-8')
         data = f"{len(msg_encoded):<{header_length}}".encode('utf-8') + msg_encoded
         return data
@@ -216,31 +227,36 @@ def pack_msg(code, msg):
     return data
 
 
+# This is sub-thread for relaying all the messages to designated recipient.
 class Message_relay_thread(threading.Thread):
-    def __init__(self, active_conn,relay_socket):
+    # THe socket of main thread is passed for monitoring main socket's status
+    def __init__(self, active_conn, relay_socket):
         threading.Thread.__init__(self)
         self.socket = relay_socket
         self.active_conn = active_conn
 
     def run(self):
+        # Keep checking of the main thread established and logged in
         while self.active_conn.fileno() != -1 and socket_status[self.active_conn.fileno()] == 0:
             time.sleep(0.1)
         if self.active_conn.fileno() == -1:
             print("DEBUG: Relay thread ends before connection")
             sys.exit()
         # print("Logged in Detected, RELAY DEBUG: Running relay thread")
+        # Listen for the client's relay thread
         self.socket.listen(1)
         conn, addr = self.socket.accept()
         # print("RELAY DEBUG: Connection established")
         message_length = int(conn.recv(header_length).decode("utf-8").strip())
         username = conn.recv(message_length).decode("utf-8").strip()
         print(f'start relay thread for user: {username}')
+        # Keep fetching messages from message buffer queue every 1 second.
         while self.active_conn.fileno() != -1:
-            #if there is the connection is active but login not finished yet
+            # if there is the connection is active but login not finished yet
             if login_status[username] == 1:
                 try:
                     msg = message_queue[username].get(block=False)
-                    data = pack_msg(0,msg)
+                    data = pack_msg(0, msg)
                     conn.send(data)
                 except queue.Empty:
                     time.sleep(1)
@@ -248,17 +264,22 @@ class Message_relay_thread(threading.Thread):
             time.sleep(1)
         print(f'User:{username} is disconnected, relay thread exits')
         sys.exit()
+
+
 command_length = 10
 header_length = 10
-user_table = {'tester': 'abc123','abc':'abc'}
+#This is pre-created testers users.
+user_table = {'tester': 'abc123', 'abc': 'abc'}
 login_status = {}
-buffer = {}
 lock = threading.Lock()
 ip = '127.0.0.1'
+# Main thread port for each client
 port = 8084
+# Relay thread port for each client
 relay_port = 8086
 max_connection = 10
 message_queue = {}
+# Create message buffer queue for each pre-created users
 for key in user_table:
     message_queue[key] = queue.Queue()
 sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -268,7 +289,7 @@ relay_sk.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sk.bind((ip, port))
 relay_sk.bind((ip, relay_port))
 print("Main Thread started")
-socket_status  = {}
+socket_status = {}
 while True:
     sk.listen()
     server_conn, server_addr = sk.accept()
