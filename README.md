@@ -39,8 +39,8 @@ This is a chat room app. We support the following command listed below with its 
 5.  Delete account
 -1. Log out
 ```
-Commands listed above are supported in our chatroom app. The client interface will ask the client to select from the above command codes and then ask client to provide further information for the command (e.g. the client needs to provide username and password for logging in or registration). Detailed description of each command is as follows:
-`0. Help` - Returns the help message that is shown above.
+Commands listed above are supported in our chatroom app. The client interface will ask the client to select from the above command codes and then ask client to provide further information for the command (e.g. the client needs to provide username and password for logging in or registration). Detailed description of each command is as follows:  
+`0. Help` - Returns the help message that is shown above.  
 `1. Log in` - Log in for an existing account. User will further be asked to type in his/her username and corresponding password.   
 `2. Send message to other users` - Send text messages to existing accounts, user will further be asked to type in the username that he/she wants to send the message to, as well as the message he/she wants to send.  
 `3. Register` - Creating a new account. User will further be asked to create his/her username and corresponding password, then he/she will be automatically logged in as a new user.  
