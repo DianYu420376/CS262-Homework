@@ -39,7 +39,15 @@ This is a chat room app. We support the following command listed below with its 
 5.  Delete account
 -1. Log out
 ```
-Commands listed above are supported in our chatroom app. The client interface will ask the client to select from the above command codes and then ask client to provide further information for the command (e.g. the client needs to provide username and password for logging in or registration).
+Commands listed above are supported in our chatroom app. The client interface will ask the client to select from the above command codes and then ask client to provide further information for the command (e.g. the client needs to provide username and password for logging in or registration). Detailed description of each command is as follows:
+`0. Help` - Returns the help message that is shown above.
+`1. Log in` - Log in for an existing account. User will further be asked to type in his/her username and corresponding password.   
+`2. Send message to other users` - Send text messages to existing accounts, user will further be asked to type in the username that he/she wants to send the message to, as well as the message he/she wants to send.  
+`3. Register` - Creating a new account. User will further be asked to create his/her username and corresponding password, then he/she will be automatically logged in as a new user.  
+`4. List all registered users` - Return a list containing all existing accounts.  
+`5. Delete account` - Delete account for an already logged in user. User will be asked to type in his/her password again to confirm the deletion.  
+`-1. Log out` - Log out.
+
 
 ### Communication Protocol
 Messages sent between the server and clients follows the following structure:  
@@ -78,7 +86,7 @@ def get_response(socket): # Unpack the message
 
 
 ## Notebook
-### main program design path:
+### Main program design path:
 We intended to have one thread that handles all the communications. After finishing the first
 version of code, we found it's nearly impossible if want to stick to blocking recv/send because the `recv()` would 
 keep waiting until enough bytes are flushed. Then we decided to add one more thread 
@@ -87,7 +95,7 @@ Then, since we have two threads now, there should be a mechanism that they can e
 to relay messages. We then adopted a dictionary of queue that each queue would maintain 
 all messages to the users which is the key for each entry of dict. To prevent from race
 condition, we used the `threading.lock()` to lock the resource.
-### protocol design:
+### Protocol design:
 We initially just wanted to use simple messages like succesful/failure to as simple
 communication. Then we feel it actually complicates the message recognition. Instead,
 we design a protocol (more detailed description shown in the above README section) such that the message from client would contain the 
@@ -96,7 +104,7 @@ we design a protocol (more detailed description shown in the above README sectio
 
 We use new line operator because the user can't input any of that since hitting return 
 would just reach EOF from user's perspective.
-### miscellaneous:
+### Miscellaneous:
 We initially implement the deletion function that user can input the username and 
 password to delete any entry. Then we realized it doesn't make sense because user should only be
 able to delete their own account.
