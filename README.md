@@ -10,6 +10,8 @@ There are already two tester users added, the username:password for them are: te
 
 Keep in mind that you can only send messages to exist users. 
 
+Notebook is appened at the end of this README
+
 ### How to run the server: 
 
   #### 1. First open up the terminal and run the server:
@@ -75,3 +77,30 @@ def get_response(socket): # Unpack the message
 
 
 
+##Notebook
+###main program design path:
+We intended to have one thread that handles all the communications. After finishing the first
+version of code, we found it's nearly impossible if want to stick to blocking recv/send because the recv() would 
+keep waiting until enough bytes are flushed. Then we decided to add one more thread 
+specially for relaying all information. 
+Then, since we have two threads now, there should be a mechanism that they can exchange information 
+to relay messages. We then adopted a dictionary of queue that each queue would maintain 
+all messages to the users which is the key for each entry of dict. To prevent from race
+condition, we used the threading.lock() to lock the resource.
+###protocol design:
+We initially just wanted to use simple messages like succesful/failure to as simple
+communication. Then we feel it actually complicate the message recognition. Instead,
+we design a protocol such that the message from client would contain the 
+1. the 10 bytes header contains the length of message body
+2. the message body that contains the command code and data separated by new line operator
+
+We use new line operator because the user can't input any of that since hitting return 
+would just reach EOF from user's perspective.
+###miscellaneous:
+We initially implement the deletion function that user can input the username and 
+password to delete any entry. THen we realized it doesn't make sense because user should only be
+able to delete their own account.
+
+Because the two-threads per client design of our program, we spent a lot of time 
+to debug to bring them up at the same time. The coordination between two threads is 
+quite hard to design. 
