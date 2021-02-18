@@ -8,7 +8,7 @@ Required Python3. You have to make sure your port 8084 and 8086 is available if 
 
 #### There are already two tester users added, the username:password for them are: tester:abc123 abc:abc
 
-Keep in mind that you can only send messages to exist users. 
+Keep in mind that you can only send messages to pre-added or registered users. Everything should work dynamically.  
 
 Notebook is appened at the end of this README
 
