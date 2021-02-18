@@ -77,8 +77,8 @@ def get_response(socket): # Unpack the message
 
 
 
-##Notebook
-###main program design path:
+## Notebook
+### main program design path:
 We intended to have one thread that handles all the communications. After finishing the first
 version of code, we found it's nearly impossible if want to stick to blocking recv/send because the recv() would 
 keep waiting until enough bytes are flushed. Then we decided to add one more thread 
@@ -87,7 +87,7 @@ Then, since we have two threads now, there should be a mechanism that they can e
 to relay messages. We then adopted a dictionary of queue that each queue would maintain 
 all messages to the users which is the key for each entry of dict. To prevent from race
 condition, we used the threading.lock() to lock the resource.
-###protocol design:
+### protocol design:
 We initially just wanted to use simple messages like succesful/failure to as simple
 communication. Then we feel it actually complicate the message recognition. Instead,
 we design a protocol such that the message from client would contain the 
@@ -96,7 +96,7 @@ we design a protocol such that the message from client would contain the
 
 We use new line operator because the user can't input any of that since hitting return 
 would just reach EOF from user's perspective.
-###miscellaneous:
+### miscellaneous:
 We initially implement the deletion function that user can input the username and 
 password to delete any entry. THen we realized it doesn't make sense because user should only be
 able to delete their own account.
