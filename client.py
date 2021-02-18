@@ -8,7 +8,7 @@ from threading import Thread
 
 # from SocketServer import ThreadingMixIn
 
-
+#This is main thread for communicating with server
 class ServerThread(Thread):
 
     def __init__(self, serversocket):
@@ -245,16 +245,18 @@ class ServerThreadread(Thread):
     def run(self):
         global log
         # print("RELAY threading tries to connect")
-
+        # If not logged in, keep waiting for main thread logging
         while not log:
             time.sleep(0.2)
             if self.socket.fileno() == -1:
                 print('main socket has been shutdown, shutting down relay thread')
                 self.s2.close()
                 sys.exit()
+        # Add small delay for remote listener
         time.sleep(0.2)
         self.s2.connect((TCP_IP, TCP_PORT2))
         # print("RELAY thread: socket connected")
+        # Keep waiting until the current username is setup and sent to remote by protocol.
         while True:
             if self.socket.fileno() == -1:
                 self.s2.shutdown(2)
@@ -272,7 +274,7 @@ class ServerThreadread(Thread):
                 # print(welcomemsg)
                 break
             time.sleep(0.2)
-
+        # Main loop that keeps relaying messages to server
         while self.socket.fileno() != -1:
             if log == 1:
                 header = self.s2.recv(header_length)
@@ -292,10 +294,6 @@ class ServerThreadread(Thread):
         self.s2.shutdown(2)
         self.s2.close()
         sys.exit()
-            # if log == 0:
-            #  print "going to exit"
-            #     s2.close()
-            #     sys.exit()
 
 
 TCP_IP = '127.0.0.1'
@@ -323,8 +321,6 @@ if status == 1:
         newthread = ServerThread(s)
         # newthread.daemon = True
         newthread.start()
-        # s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # s2.connect((TCP_IP, TCP_PORT2))
         newthread2 = ServerThreadread(s)
         # newthread2.daemon = True
         newthread2.start()
