@@ -17,3 +17,6 @@ In this notebook we are going to discuss how the logical clock for each machine 
 
 #### How the logical clock change with `send_prob`?
 ![](images/tick-2-4-6.png)
+
+#### How the logical clock change with  `(ticks1, ticks2, ticks3)`?
+![](images/tick-2-4-6.png)
