@@ -16,6 +16,7 @@ We use the module `multiprocessing.Queue` to construct all three virtual machine
 In this notebook we are going to discuss how the logical clock for each machine will be affected by the parameters `(ticks1, ticks2, ticks3)` and `send_prob`.
 
 #### How the logical clock change with `send_prob`?
+Let's first look at the case where `(ticks1, ticks2, ticks3) = (2,4,6)` and `send_prob = 30%`
 ![](images/tick-2-4-6.png)
 
 #### How the logical clock change with  `(ticks1, ticks2, ticks3)`?
