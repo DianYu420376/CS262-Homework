@@ -19,6 +19,6 @@ In this notebook we are going to discuss how the logical clock for each machine 
 ![](images/tick-2-4-6.png)
 
 #### How the logical clock change with  `(ticks1, ticks2, ticks3)`?
-![](images/tick-4-5-6.png)
-![](images/tick-2-4-6.png)
-![](images/tick-1-6-12.png)
+![](images/tick-4-5-6.png)  
+![](images/tick-2-4-6.png)  
+![](images/tick-1-6-12.png)  
