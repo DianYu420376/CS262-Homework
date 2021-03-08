@@ -1,0 +1,121 @@
+Ticks: 2
+internal event at 17:43:46, logical time: 1, length of message queue: 0
+internal event at 17:43:46, logical time: 2, length of message queue: 0
+Send to 2 at 17:43:47, logical time: 3, length of message queue: 0
+internal event at 17:43:47, logical time: 4, length of message queue: 0
+Received at global time: 17:43:48, logical time: 10, length of message queue: 4
+Received at global time: 17:43:48, logical time: 11, length of message queue: 3
+Received at global time: 17:43:49, logical time: 12, length of message queue: 2
+Received at global time: 17:43:49, logical time: 13, length of message queue: 1
+Received at global time: 17:43:50, logical time: 14, length of message queue: 1
+Received at global time: 17:43:50, logical time: 23, length of message queue: 0
+Received at global time: 17:43:51, logical time: 27, length of message queue: 0
+internal event at 17:43:51, logical time: 28, length of message queue: 0
+Received at global time: 17:43:52, logical time: 31, length of message queue: 2
+Received at global time: 17:43:52, logical time: 36, length of message queue: 1
+Received at global time: 17:43:53, logical time: 37, length of message queue: 2
+Received at global time: 17:43:53, logical time: 39, length of message queue: 1
+Received at global time: 17:43:54, logical time: 40, length of message queue: 2
+Received at global time: 17:43:54, logical time: 48, length of message queue: 1
+Received at global time: 17:43:55, logical time: 51, length of message queue: 2
+Received at global time: 17:43:55, logical time: 53, length of message queue: 1
+Received at global time: 17:43:56, logical time: 54, length of message queue: 2
+Received at global time: 17:43:56, logical time: 56, length of message queue: 1
+Received at global time: 17:43:57, logical time: 58, length of message queue: 1
+Received at global time: 17:43:57, logical time: 64, length of message queue: 0
+Received at global time: 17:43:58, logical time: 70, length of message queue: 1
+Received at global time: 17:43:58, logical time: 71, length of message queue: 0
+Received at global time: 17:43:59, logical time: 73, length of message queue: 1
+Received at global time: 17:43:59, logical time: 78, length of message queue: 0
+Received at global time: 17:44:00, logical time: 79, length of message queue: 2
+Received at global time: 17:44:00, logical time: 80, length of message queue: 1
+Received at global time: 17:44:01, logical time: 83, length of message queue: 3
+Received at global time: 17:44:01, logical time: 85, length of message queue: 2
+Received at global time: 17:44:02, logical time: 89, length of message queue: 2
+Received at global time: 17:44:02, logical time: 90, length of message queue: 1
+Received at global time: 17:44:03, logical time: 93, length of message queue: 1
+Received at global time: 17:44:03, logical time: 100, length of message queue: 0
+Received at global time: 17:44:04, logical time: 109, length of message queue: 1
+Received at global time: 17:44:04, logical time: 111, length of message queue: 0
+Received at global time: 17:44:05, logical time: 112, length of message queue: 0
+internal event at 17:44:05, logical time: 113, length of message queue: 0
+Received at global time: 17:44:06, logical time: 116, length of message queue: 0
+internal event at 17:44:06, logical time: 117, length of message queue: 0
+Received at global time: 17:44:07, logical time: 125, length of message queue: 0
+Send to 1 at 17:44:07, logical time: 126, length of message queue: 0
+Received at global time: 17:44:08, logical time: 132, length of message queue: 1
+Received at global time: 17:44:08, logical time: 133, length of message queue: 0
+Received at global time: 17:44:09, logical time: 134, length of message queue: 1
+Received at global time: 17:44:09, logical time: 135, length of message queue: 0
+Send to both at 17:44:10, logical time: 136, length of message queue: 0
+internal event at 17:44:10, logical time: 137, length of message queue: 0
+Received at global time: 17:44:11, logical time: 147, length of message queue: 1
+Received at global time: 17:44:11, logical time: 148, length of message queue: 0
+Received at global time: 17:44:12, logical time: 153, length of message queue: 1
+Received at global time: 17:44:12, logical time: 155, length of message queue: 0
+Received at global time: 17:44:13, logical time: 164, length of message queue: 0
+internal event at 17:44:13, logical time: 165, length of message queue: 0
+Received at global time: 17:44:14, logical time: 167, length of message queue: 0
+Send to 2 at 17:44:14, logical time: 168, length of message queue: 0
+Received at global time: 17:44:15, logical time: 175, length of message queue: 1
+Received at global time: 17:44:15, logical time: 176, length of message queue: 0
+Received at global time: 17:44:16, logical time: 177, length of message queue: 2
+Received at global time: 17:44:16, logical time: 178, length of message queue: 1
+Received at global time: 17:44:17, logical time: 179, length of message queue: 1
+Received at global time: 17:44:17, logical time: 183, length of message queue: 0
+Received at global time: 17:44:18, logical time: 189, length of message queue: 1
+Received at global time: 17:44:18, logical time: 192, length of message queue: 0
+Send to both at 17:44:19, logical time: 193, length of message queue: 0
+internal event at 17:44:19, logical time: 194, length of message queue: 0
+Received at global time: 17:44:20, logical time: 205, length of message queue: 0
+Send to 1 at 17:44:20, logical time: 206, length of message queue: 0
+Received at global time: 17:44:22, logical time: 209, length of message queue: 2
+Received at global time: 17:44:22, logical time: 210, length of message queue: 2
+Received at global time: 17:44:23, logical time: 211, length of message queue: 2
+Received at global time: 17:44:23, logical time: 212, length of message queue: 1
+Received at global time: 17:44:24, logical time: 216, length of message queue: 4
+Received at global time: 17:44:24, logical time: 220, length of message queue: 4
+Received at global time: 17:44:25, logical time: 221, length of message queue: 4
+Received at global time: 17:44:25, logical time: 223, length of message queue: 3
+Received at global time: 17:44:26, logical time: 224, length of message queue: 3
+Received at global time: 17:44:26, logical time: 225, length of message queue: 2
+Received at global time: 17:44:27, logical time: 226, length of message queue: 3
+Received at global time: 17:44:27, logical time: 231, length of message queue: 2
+Received at global time: 17:44:28, logical time: 236, length of message queue: 2
+Received at global time: 17:44:28, logical time: 240, length of message queue: 1
+Received at global time: 17:44:29, logical time: 244, length of message queue: 3
+Received at global time: 17:44:29, logical time: 249, length of message queue: 2
+Received at global time: 17:44:30, logical time: 250, length of message queue: 3
+Received at global time: 17:44:30, logical time: 253, length of message queue: 3
+Received at global time: 17:44:31, logical time: 257, length of message queue: 2
+Received at global time: 17:44:31, logical time: 258, length of message queue: 1
+Received at global time: 17:44:32, logical time: 260, length of message queue: 1
+Received at global time: 17:44:32, logical time: 272, length of message queue: 0
+Received at global time: 17:44:33, logical time: 274, length of message queue: 3
+Received at global time: 17:44:33, logical time: 275, length of message queue: 2
+Received at global time: 17:44:34, logical time: 278, length of message queue: 2
+Received at global time: 17:44:34, logical time: 279, length of message queue: 1
+Received at global time: 17:44:35, logical time: 283, length of message queue: 1
+Received at global time: 17:44:35, logical time: 286, length of message queue: 0
+Received at global time: 17:44:36, logical time: 295, length of message queue: 0
+internal event at 17:44:36, logical time: 296, length of message queue: 0
+Received at global time: 17:44:37, logical time: 297, length of message queue: 2
+Received at global time: 17:44:37, logical time: 298, length of message queue: 1
+Received at global time: 17:44:38, logical time: 302, length of message queue: 1
+Received at global time: 17:44:38, logical time: 303, length of message queue: 0
+Send to 1 at 17:44:39, logical time: 304, length of message queue: 1
+Received at global time: 17:44:39, logical time: 306, length of message queue: 0
+Received at global time: 17:44:40, logical time: 317, length of message queue: 1
+Received at global time: 17:44:40, logical time: 320, length of message queue: 0
+Received at global time: 17:44:41, logical time: 321, length of message queue: 1
+Received at global time: 17:44:41, logical time: 322, length of message queue: 0
+Received at global time: 17:44:42, logical time: 333, length of message queue: 0
+Send to 1 at 17:44:42, logical time: 334, length of message queue: 0
+Received at global time: 17:44:43, logical time: 335, length of message queue: 0
+Send to 2 at 17:44:43, logical time: 336, length of message queue: 0
+Received at global time: 17:44:44, logical time: 345, length of message queue: 0
+internal event at 17:44:44, logical time: 346, length of message queue: 0
+Send to 1 at 17:44:45, logical time: 347, length of message queue: 0
+internal event at 17:44:45, logical time: 348, length of message queue: 0
+Received at global time: 17:44:46, logical time: 352, length of message queue: 1
+Received at global time: 17:44:46, logical time: 353, length of message queue: 0

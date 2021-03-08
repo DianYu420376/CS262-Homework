@@ -1,0 +1,361 @@
+Ticks: 6
+internal event at 17:43:46, logical time: 1, length of message queue: 0
+internal event at 17:43:46, logical time: 2, length of message queue: 0
+internal event at 17:43:46, logical time: 3, length of message queue: 0
+internal event at 17:43:46, logical time: 4, length of message queue: 0
+internal event at 17:43:46, logical time: 5, length of message queue: 0
+Send to 2 at 17:43:46, logical time: 6, length of message queue: 0
+Received at global time: 17:43:47, logical time: 7, length of message queue: 0
+internal event at 17:43:47, logical time: 8, length of message queue: 0
+internal event at 17:43:47, logical time: 9, length of message queue: 0
+Send to both at 17:43:47, logical time: 10, length of message queue: 0
+Send to 1 at 17:43:47, logical time: 11, length of message queue: 0
+Send to 1 at 17:43:47, logical time: 12, length of message queue: 0
+Received at global time: 17:43:48, logical time: 13, length of message queue: 0
+internal event at 17:43:48, logical time: 14, length of message queue: 0
+internal event at 17:43:48, logical time: 15, length of message queue: 0
+internal event at 17:43:48, logical time: 16, length of message queue: 0
+internal event at 17:43:48, logical time: 17, length of message queue: 0
+internal event at 17:43:48, logical time: 18, length of message queue: 0
+Received at global time: 17:43:49, logical time: 19, length of message queue: 0
+internal event at 17:43:49, logical time: 20, length of message queue: 0
+internal event at 17:43:49, logical time: 21, length of message queue: 0
+internal event at 17:43:49, logical time: 22, length of message queue: 0
+Send to both at 17:43:49, logical time: 23, length of message queue: 0
+internal event at 17:43:49, logical time: 24, length of message queue: 0
+Received at global time: 17:43:50, logical time: 25, length of message queue: 1
+Received at global time: 17:43:50, logical time: 26, length of message queue: 0
+internal event at 17:43:50, logical time: 27, length of message queue: 0
+internal event at 17:43:50, logical time: 28, length of message queue: 0
+internal event at 17:43:50, logical time: 29, length of message queue: 0
+internal event at 17:43:50, logical time: 30, length of message queue: 0
+Send to both at 17:43:51, logical time: 31, length of message queue: 0
+Send to 2 at 17:43:51, logical time: 32, length of message queue: 0
+internal event at 17:43:51, logical time: 33, length of message queue: 0
+internal event at 17:43:51, logical time: 34, length of message queue: 0
+internal event at 17:43:51, logical time: 35, length of message queue: 0
+Send to 1 at 17:43:51, logical time: 36, length of message queue: 0
+internal event at 17:43:52, logical time: 37, length of message queue: 0
+internal event at 17:43:52, logical time: 38, length of message queue: 0
+Send to both at 17:43:52, logical time: 39, length of message queue: 0
+Send to 1 at 17:43:52, logical time: 40, length of message queue: 0
+internal event at 17:43:52, logical time: 41, length of message queue: 0
+internal event at 17:43:52, logical time: 42, length of message queue: 0
+internal event at 17:43:53, logical time: 43, length of message queue: 0
+internal event at 17:43:53, logical time: 44, length of message queue: 0
+internal event at 17:43:53, logical time: 45, length of message queue: 0
+internal event at 17:43:53, logical time: 46, length of message queue: 0
+internal event at 17:43:53, logical time: 47, length of message queue: 0
+Send to both at 17:43:53, logical time: 48, length of message queue: 0
+internal event at 17:43:54, logical time: 49, length of message queue: 0
+internal event at 17:43:54, logical time: 50, length of message queue: 0
+internal event at 17:43:54, logical time: 51, length of message queue: 0
+Send to 2 at 17:43:54, logical time: 52, length of message queue: 0
+Send to both at 17:43:54, logical time: 53, length of message queue: 0
+Send to both at 17:43:54, logical time: 54, length of message queue: 0
+internal event at 17:43:55, logical time: 55, length of message queue: 0
+Send to both at 17:43:55, logical time: 56, length of message queue: 0
+internal event at 17:43:55, logical time: 57, length of message queue: 0
+internal event at 17:43:55, logical time: 58, length of message queue: 0
+internal event at 17:43:55, logical time: 59, length of message queue: 0
+internal event at 17:43:55, logical time: 60, length of message queue: 0
+Send to 2 at 17:43:56, logical time: 61, length of message queue: 0
+internal event at 17:43:56, logical time: 62, length of message queue: 0
+Send to 2 at 17:43:56, logical time: 63, length of message queue: 0
+internal event at 17:43:56, logical time: 64, length of message queue: 0
+internal event at 17:43:56, logical time: 65, length of message queue: 0
+internal event at 17:43:56, logical time: 66, length of message queue: 0
+internal event at 17:43:57, logical time: 67, length of message queue: 0
+internal event at 17:43:57, logical time: 68, length of message queue: 0
+internal event at 17:43:57, logical time: 69, length of message queue: 0
+Send to 1 at 17:43:57, logical time: 70, length of message queue: 0
+Send to 1 at 17:43:57, logical time: 71, length of message queue: 0
+internal event at 17:43:57, logical time: 72, length of message queue: 0
+Send to 1 at 17:43:58, logical time: 73, length of message queue: 0
+Send to 2 at 17:43:58, logical time: 74, length of message queue: 0
+internal event at 17:43:58, logical time: 75, length of message queue: 0
+Send to 2 at 17:43:58, logical time: 76, length of message queue: 0
+internal event at 17:43:58, logical time: 77, length of message queue: 0
+Send to both at 17:43:58, logical time: 78, length of message queue: 0
+Send to both at 17:43:59, logical time: 79, length of message queue: 0
+Send to both at 17:43:59, logical time: 80, length of message queue: 0
+Send to 2 at 17:43:59, logical time: 81, length of message queue: 0
+internal event at 17:43:59, logical time: 82, length of message queue: 0
+Send to both at 17:43:59, logical time: 83, length of message queue: 0
+internal event at 17:43:59, logical time: 84, length of message queue: 0
+Send to both at 17:44:00, logical time: 85, length of message queue: 0
+internal event at 17:44:00, logical time: 86, length of message queue: 0
+internal event at 17:44:00, logical time: 87, length of message queue: 0
+internal event at 17:44:00, logical time: 88, length of message queue: 0
+Send to 1 at 17:44:00, logical time: 89, length of message queue: 0
+Send to 1 at 17:44:00, logical time: 90, length of message queue: 0
+internal event at 17:44:01, logical time: 91, length of message queue: 0
+internal event at 17:44:01, logical time: 92, length of message queue: 0
+Send to both at 17:44:01, logical time: 93, length of message queue: 0
+internal event at 17:44:01, logical time: 94, length of message queue: 0
+internal event at 17:44:01, logical time: 95, length of message queue: 0
+internal event at 17:44:01, logical time: 96, length of message queue: 0
+internal event at 17:44:02, logical time: 97, length of message queue: 0
+internal event at 17:44:02, logical time: 98, length of message queue: 0
+internal event at 17:44:02, logical time: 99, length of message queue: 0
+Send to 1 at 17:44:02, logical time: 100, length of message queue: 0
+internal event at 17:44:02, logical time: 101, length of message queue: 0
+internal event at 17:44:02, logical time: 102, length of message queue: 0
+internal event at 17:44:03, logical time: 103, length of message queue: 0
+internal event at 17:44:03, logical time: 104, length of message queue: 0
+internal event at 17:44:03, logical time: 105, length of message queue: 0
+internal event at 17:44:03, logical time: 106, length of message queue: 0
+internal event at 17:44:03, logical time: 107, length of message queue: 0
+Send to 2 at 17:44:03, logical time: 108, length of message queue: 0
+Received at global time: 17:44:04, logical time: 109, length of message queue: 0
+internal event at 17:44:04, logical time: 110, length of message queue: 0
+Send to both at 17:44:04, logical time: 111, length of message queue: 0
+internal event at 17:44:04, logical time: 112, length of message queue: 0
+internal event at 17:44:04, logical time: 113, length of message queue: 0
+internal event at 17:44:04, logical time: 114, length of message queue: 0
+Received at global time: 17:44:05, logical time: 115, length of message queue: 0
+Send to 1 at 17:44:05, logical time: 116, length of message queue: 0
+internal event at 17:44:05, logical time: 117, length of message queue: 0
+Send to 2 at 17:44:05, logical time: 118, length of message queue: 0
+internal event at 17:44:05, logical time: 119, length of message queue: 0
+Send to 2 at 17:44:05, logical time: 120, length of message queue: 0
+internal event at 17:44:06, logical time: 121, length of message queue: 0
+internal event at 17:44:06, logical time: 122, length of message queue: 0
+internal event at 17:44:06, logical time: 123, length of message queue: 0
+internal event at 17:44:06, logical time: 124, length of message queue: 0
+internal event at 17:44:06, logical time: 125, length of message queue: 0
+internal event at 17:44:06, logical time: 126, length of message queue: 0
+internal event at 17:44:07, logical time: 127, length of message queue: 0
+internal event at 17:44:07, logical time: 128, length of message queue: 0
+internal event at 17:44:07, logical time: 129, length of message queue: 0
+internal event at 17:44:07, logical time: 130, length of message queue: 0
+internal event at 17:44:07, logical time: 131, length of message queue: 0
+Send to 1 at 17:44:07, logical time: 132, length of message queue: 0
+Send to both at 17:44:08, logical time: 133, length of message queue: 0
+Send to 2 at 17:44:08, logical time: 134, length of message queue: 0
+Send to both at 17:44:08, logical time: 135, length of message queue: 0
+internal event at 17:44:08, logical time: 136, length of message queue: 0
+internal event at 17:44:08, logical time: 137, length of message queue: 0
+internal event at 17:44:08, logical time: 138, length of message queue: 0
+internal event at 17:44:09, logical time: 139, length of message queue: 0
+internal event at 17:44:09, logical time: 140, length of message queue: 0
+internal event at 17:44:09, logical time: 141, length of message queue: 0
+internal event at 17:44:09, logical time: 142, length of message queue: 0
+internal event at 17:44:09, logical time: 143, length of message queue: 0
+internal event at 17:44:09, logical time: 144, length of message queue: 0
+Received at global time: 17:44:10, logical time: 145, length of message queue: 1
+Received at global time: 17:44:10, logical time: 146, length of message queue: 0
+Send to 1 at 17:44:10, logical time: 147, length of message queue: 0
+internal event at 17:44:10, logical time: 148, length of message queue: 0
+internal event at 17:44:10, logical time: 149, length of message queue: 0
+internal event at 17:44:10, logical time: 150, length of message queue: 0
+Received at global time: 17:44:11, logical time: 151, length of message queue: 0
+Send to 2 at 17:44:11, logical time: 152, length of message queue: 0
+Send to both at 17:44:11, logical time: 153, length of message queue: 0
+internal event at 17:44:11, logical time: 154, length of message queue: 0
+Send to both at 17:44:11, logical time: 155, length of message queue: 0
+internal event at 17:44:11, logical time: 156, length of message queue: 0
+internal event at 17:44:12, logical time: 157, length of message queue: 0
+Send to 2 at 17:44:12, logical time: 158, length of message queue: 0
+internal event at 17:44:12, logical time: 159, length of message queue: 0
+internal event at 17:44:12, logical time: 160, length of message queue: 0
+internal event at 17:44:12, logical time: 161, length of message queue: 0
+Send to 2 at 17:44:12, logical time: 162, length of message queue: 0
+Received at global time: 17:44:13, logical time: 164, length of message queue: 0
+internal event at 17:44:13, logical time: 165, length of message queue: 0
+Send to 2 at 17:44:13, logical time: 166, length of message queue: 0
+Send to both at 17:44:13, logical time: 167, length of message queue: 0
+internal event at 17:44:13, logical time: 168, length of message queue: 0
+internal event at 17:44:13, logical time: 169, length of message queue: 0
+Received at global time: 17:44:14, logical time: 170, length of message queue: 0
+Send to 2 at 17:44:14, logical time: 171, length of message queue: 0
+internal event at 17:44:14, logical time: 172, length of message queue: 0
+internal event at 17:44:14, logical time: 173, length of message queue: 0
+internal event at 17:44:14, logical time: 174, length of message queue: 0
+Send to 1 at 17:44:14, logical time: 175, length of message queue: 0
+Received at global time: 17:44:15, logical time: 176, length of message queue: 0
+Send to 1 at 17:44:15, logical time: 177, length of message queue: 0
+internal event at 17:44:15, logical time: 178, length of message queue: 0
+internal event at 17:44:15, logical time: 179, length of message queue: 0
+internal event at 17:44:15, logical time: 180, length of message queue: 0
+internal event at 17:44:15, logical time: 181, length of message queue: 0
+Received at global time: 17:44:16, logical time: 182, length of message queue: 0
+Send to 1 at 17:44:16, logical time: 183, length of message queue: 0
+internal event at 17:44:16, logical time: 184, length of message queue: 0
+internal event at 17:44:16, logical time: 185, length of message queue: 0
+Send to 2 at 17:44:16, logical time: 186, length of message queue: 0
+internal event at 17:44:16, logical time: 187, length of message queue: 0
+internal event at 17:44:18, logical time: 188, length of message queue: 0
+Send to 1 at 17:44:18, logical time: 189, length of message queue: 0
+internal event at 17:44:18, logical time: 190, length of message queue: 0
+Send to 2 at 17:44:18, logical time: 191, length of message queue: 0
+internal event at 17:44:18, logical time: 192, length of message queue: 0
+internal event at 17:44:18, logical time: 193, length of message queue: 0
+internal event at 17:44:19, logical time: 194, length of message queue: 0
+internal event at 17:44:19, logical time: 195, length of message queue: 0
+internal event at 17:44:19, logical time: 196, length of message queue: 0
+internal event at 17:44:19, logical time: 197, length of message queue: 0
+internal event at 17:44:19, logical time: 198, length of message queue: 0
+internal event at 17:44:19, logical time: 199, length of message queue: 0
+Received at global time: 17:44:20, logical time: 200, length of message queue: 0
+internal event at 17:44:20, logical time: 201, length of message queue: 0
+internal event at 17:44:20, logical time: 202, length of message queue: 0
+internal event at 17:44:20, logical time: 203, length of message queue: 0
+Send to 2 at 17:44:20, logical time: 204, length of message queue: 0
+Send to both at 17:44:20, logical time: 205, length of message queue: 0
+internal event at 17:44:21, logical time: 206, length of message queue: 0
+internal event at 17:44:21, logical time: 207, length of message queue: 0
+internal event at 17:44:21, logical time: 208, length of message queue: 0
+Send to both at 17:44:21, logical time: 209, length of message queue: 0
+Send to 1 at 17:44:21, logical time: 210, length of message queue: 0
+Send to 1 at 17:44:21, logical time: 211, length of message queue: 0
+Received at global time: 17:44:22, logical time: 212, length of message queue: 1
+Received at global time: 17:44:22, logical time: 213, length of message queue: 0
+internal event at 17:44:22, logical time: 214, length of message queue: 0
+internal event at 17:44:22, logical time: 215, length of message queue: 0
+Send to both at 17:44:22, logical time: 216, length of message queue: 0
+internal event at 17:44:22, logical time: 217, length of message queue: 0
+Received at global time: 17:44:23, logical time: 218, length of message queue: 1
+Received at global time: 17:44:23, logical time: 219, length of message queue: 0
+Send to 1 at 17:44:23, logical time: 220, length of message queue: 0
+Send to 1 at 17:44:23, logical time: 221, length of message queue: 0
+internal event at 17:44:23, logical time: 222, length of message queue: 0
+Send to 1 at 17:44:23, logical time: 223, length of message queue: 0
+Received at global time: 17:44:24, logical time: 224, length of message queue: 0
+internal event at 17:44:24, logical time: 225, length of message queue: 0
+Send to 1 at 17:44:24, logical time: 226, length of message queue: 0
+internal event at 17:44:24, logical time: 227, length of message queue: 0
+internal event at 17:44:24, logical time: 228, length of message queue: 0
+Send to 2 at 17:44:24, logical time: 229, length of message queue: 0
+Received at global time: 17:44:25, logical time: 231, length of message queue: 1
+Received at global time: 17:44:25, logical time: 232, length of message queue: 0
+internal event at 17:44:25, logical time: 233, length of message queue: 0
+internal event at 17:44:25, logical time: 234, length of message queue: 0
+internal event at 17:44:25, logical time: 235, length of message queue: 0
+internal event at 17:44:25, logical time: 236, length of message queue: 0
+Received at global time: 17:44:26, logical time: 237, length of message queue: 0
+internal event at 17:44:26, logical time: 238, length of message queue: 0
+internal event at 17:44:26, logical time: 239, length of message queue: 0
+Send to 1 at 17:44:26, logical time: 240, length of message queue: 0
+internal event at 17:44:26, logical time: 241, length of message queue: 0
+Send to 2 at 17:44:26, logical time: 242, length of message queue: 0
+Received at global time: 17:44:27, logical time: 243, length of message queue: 1
+Received at global time: 17:44:27, logical time: 244, length of message queue: 0
+internal event at 17:44:27, logical time: 245, length of message queue: 0
+internal event at 17:44:27, logical time: 246, length of message queue: 0
+internal event at 17:44:27, logical time: 247, length of message queue: 0
+internal event at 17:44:27, logical time: 248, length of message queue: 0
+Send to both at 17:44:28, logical time: 249, length of message queue: 0
+Send to 1 at 17:44:28, logical time: 250, length of message queue: 0
+internal event at 17:44:28, logical time: 251, length of message queue: 0
+internal event at 17:44:28, logical time: 252, length of message queue: 0
+Send to both at 17:44:28, logical time: 253, length of message queue: 0
+internal event at 17:44:28, logical time: 254, length of message queue: 0
+internal event at 17:44:29, logical time: 255, length of message queue: 0
+internal event at 17:44:29, logical time: 256, length of message queue: 0
+Send to both at 17:44:29, logical time: 257, length of message queue: 0
+Send to both at 17:44:29, logical time: 258, length of message queue: 0
+internal event at 17:44:29, logical time: 259, length of message queue: 0
+internal event at 17:44:29, logical time: 260, length of message queue: 0
+Received at global time: 17:44:30, logical time: 261, length of message queue: 0
+internal event at 17:44:30, logical time: 262, length of message queue: 0
+internal event at 17:44:30, logical time: 263, length of message queue: 0
+internal event at 17:44:30, logical time: 264, length of message queue: 0
+internal event at 17:44:30, logical time: 265, length of message queue: 0
+internal event at 17:44:30, logical time: 266, length of message queue: 0
+Received at global time: 17:44:31, logical time: 267, length of message queue: 0
+Send to 2 at 17:44:31, logical time: 268, length of message queue: 0
+internal event at 17:44:31, logical time: 269, length of message queue: 0
+internal event at 17:44:31, logical time: 270, length of message queue: 0
+internal event at 17:44:31, logical time: 271, length of message queue: 0
+Send to both at 17:44:31, logical time: 272, length of message queue: 0
+Received at global time: 17:44:32, logical time: 274, length of message queue: 0
+Send to 1 at 17:44:32, logical time: 275, length of message queue: 0
+internal event at 17:44:32, logical time: 276, length of message queue: 0
+internal event at 17:44:32, logical time: 277, length of message queue: 0
+Send to 1 at 17:44:32, logical time: 278, length of message queue: 0
+internal event at 17:44:32, logical time: 279, length of message queue: 0
+Received at global time: 17:44:33, logical time: 280, length of message queue: 0
+internal event at 17:44:33, logical time: 281, length of message queue: 0
+internal event at 17:44:33, logical time: 282, length of message queue: 0
+Send to 1 at 17:44:33, logical time: 283, length of message queue: 0
+internal event at 17:44:33, logical time: 284, length of message queue: 0
+internal event at 17:44:33, logical time: 285, length of message queue: 0
+Send to 1 at 17:44:34, logical time: 286, length of message queue: 0
+internal event at 17:44:34, logical time: 287, length of message queue: 0
+internal event at 17:44:34, logical time: 288, length of message queue: 0
+internal event at 17:44:34, logical time: 289, length of message queue: 0
+internal event at 17:44:34, logical time: 290, length of message queue: 0
+internal event at 17:44:34, logical time: 291, length of message queue: 0
+Received at global time: 17:44:35, logical time: 292, length of message queue: 0
+Send to 2 at 17:44:35, logical time: 293, length of message queue: 0
+internal event at 17:44:35, logical time: 294, length of message queue: 0
+Send to both at 17:44:35, logical time: 295, length of message queue: 0
+internal event at 17:44:35, logical time: 296, length of message queue: 0
+internal event at 17:44:35, logical time: 297, length of message queue: 0
+Send to 1 at 17:44:36, logical time: 298, length of message queue: 0
+internal event at 17:44:36, logical time: 299, length of message queue: 0
+internal event at 17:44:36, logical time: 300, length of message queue: 0
+internal event at 17:44:36, logical time: 301, length of message queue: 0
+Send to 1 at 17:44:36, logical time: 302, length of message queue: 0
+internal event at 17:44:36, logical time: 303, length of message queue: 0
+Received at global time: 17:44:37, logical time: 304, length of message queue: 0
+internal event at 17:44:37, logical time: 305, length of message queue: 0
+internal event at 17:44:37, logical time: 306, length of message queue: 0
+internal event at 17:44:37, logical time: 307, length of message queue: 0
+internal event at 17:44:37, logical time: 308, length of message queue: 0
+internal event at 17:44:37, logical time: 309, length of message queue: 0
+internal event at 17:44:38, logical time: 310, length of message queue: 0
+internal event at 17:44:38, logical time: 311, length of message queue: 0
+internal event at 17:44:38, logical time: 312, length of message queue: 0
+internal event at 17:44:38, logical time: 313, length of message queue: 0
+internal event at 17:44:38, logical time: 314, length of message queue: 0
+internal event at 17:44:38, logical time: 315, length of message queue: 0
+internal event at 17:44:39, logical time: 316, length of message queue: 0
+Send to both at 17:44:39, logical time: 317, length of message queue: 0
+internal event at 17:44:39, logical time: 318, length of message queue: 0
+internal event at 17:44:39, logical time: 319, length of message queue: 0
+Send to 1 at 17:44:39, logical time: 320, length of message queue: 0
+internal event at 17:44:39, logical time: 321, length of message queue: 0
+Send to 1 at 17:44:40, logical time: 322, length of message queue: 0
+Send to 2 at 17:44:40, logical time: 323, length of message queue: 0
+Send to 2 at 17:44:40, logical time: 324, length of message queue: 0
+Send to 2 at 17:44:40, logical time: 325, length of message queue: 0
+internal event at 17:44:40, logical time: 326, length of message queue: 0
+internal event at 17:44:40, logical time: 327, length of message queue: 0
+internal event at 17:44:41, logical time: 328, length of message queue: 0
+internal event at 17:44:41, logical time: 329, length of message queue: 0
+internal event at 17:44:41, logical time: 330, length of message queue: 0
+internal event at 17:44:41, logical time: 331, length of message queue: 0
+Send to 2 at 17:44:41, logical time: 332, length of message queue: 0
+Send to 1 at 17:44:41, logical time: 333, length of message queue: 0
+Send to both at 17:44:42, logical time: 334, length of message queue: 0
+internal event at 17:44:42, logical time: 335, length of message queue: 0
+internal event at 17:44:42, logical time: 336, length of message queue: 0
+Send to 2 at 17:44:42, logical time: 337, length of message queue: 0
+internal event at 17:44:42, logical time: 338, length of message queue: 0
+internal event at 17:44:42, logical time: 339, length of message queue: 0
+Received at global time: 17:44:43, logical time: 340, length of message queue: 0
+internal event at 17:44:43, logical time: 341, length of message queue: 0
+internal event at 17:44:43, logical time: 342, length of message queue: 0
+internal event at 17:44:43, logical time: 343, length of message queue: 0
+internal event at 17:44:43, logical time: 344, length of message queue: 0
+Send to both at 17:44:43, logical time: 345, length of message queue: 0
+Received at global time: 17:44:44, logical time: 346, length of message queue: 1
+Received at global time: 17:44:44, logical time: 348, length of message queue: 0
+internal event at 17:44:44, logical time: 349, length of message queue: 0
+Send to 2 at 17:44:44, logical time: 350, length of message queue: 0
+internal event at 17:44:44, logical time: 351, length of message queue: 0
+internal event at 17:44:44, logical time: 352, length of message queue: 0
+Received at global time: 17:44:45, logical time: 353, length of message queue: 0
+internal event at 17:44:45, logical time: 354, length of message queue: 0
+internal event at 17:44:45, logical time: 355, length of message queue: 0
+internal event at 17:44:45, logical time: 356, length of message queue: 0
+Send to 2 at 17:44:45, logical time: 357, length of message queue: 0
+internal event at 17:44:45, logical time: 358, length of message queue: 0
+internal event at 17:44:46, logical time: 359, length of message queue: 0
+Send to 1 at 17:44:46, logical time: 360, length of message queue: 0
+internal event at 17:44:46, logical time: 361, length of message queue: 0
+internal event at 17:44:46, logical time: 362, length of message queue: 0
+internal event at 17:44:46, logical time: 363, length of message queue: 0
+internal event at 17:44:46, logical time: 364, length of message queue: 0
