@@ -30,6 +30,8 @@ Based on these observations we conclude that there's a 'phase transition' in the
 
 #### How the logical clock change with  `(ticks1, ticks2, ticks3)`?
 In this section, we will vary the parameter `(ticks1, ticks2, ticks3)`, for each set of parameter, we generate a figure similar to previous section to study how the variation of speed is going to affect the time stamp. We tested three sets of parameter: `(ticks1, ticks2, ticks3) = (4,5,6), (2,4,6), (1,6,12)`. The numerical results are shown in following figures:
+
+
 `(ticks1, ticks2, ticks3) = (4,5,6)` (Small Variation)
 ![](images/tick-4-5-6.PNG)  
 `(ticks1, ticks2, ticks3) = (2,4,6)` (Moderate Variation)
