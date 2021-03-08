@@ -17,6 +17,7 @@ In this notebook we are going to discuss how the logical clock for each machine 
 
 #### How the logical clock change with `send_prob`?
 Let's first look at the case where `(ticks1, ticks2, ticks3) = (2,4,6)`. The following figure shows how the time stamps of each machine changes with global time, `send_prob` is setted to be 3%, 30%, 60%, 90% from left to right:
+
 ![](images/tick-2-4-6.png)  
 
 By looking at the first two figures on the left, we may conclude that the machine with the fastest speed will dominate the numbering of the time stamp becuase the three lines almost aligned with each other. This makes sense because when receiving a message the time stamp is calculated `max(time_stamp_of_the_message, local_time_stamp) +1`, which implies that the time stamp at every machine will increase with the time stamp of the fastest one.
@@ -28,6 +29,10 @@ However, if we look at the two figures on the right, the time stamp for Machine 
 Based on these observations we conclude that there's a 'phase transition' in the behavior of the time stamps as `send_prob` grows larger. The critical point is the point where messages start to queue up in the inbox of the slower machines. If `send_prob` is smaller than this value, then the evolving of time stamps are going to roughly follow the time stamp of the fastest machine. If `send_prob` is larger than this value, messages are going to queue up and we might observe behavior as shown in the two figures on the right.
 
 #### How the logical clock change with  `(ticks1, ticks2, ticks3)`?
+In this section, we will vary the parameter `(ticks1, ticks2, ticks3)`, for each set of parameter, we generate a figure similar to previous section to study how the variation of speed is going to affect the time stamp. We tested three sets of parameter: `(ticks1, ticks2, ticks3) = (4,5,6), (2,4,6), (1,6,12)`. The numerical results are shown in following figures:
+`(ticks1, ticks2, ticks3) = (4,5,6)` (Small Variation)
 ![](images/tick-4-5-6.PNG)  
-![](images/tick-2-4-6.png)  
+`(ticks1, ticks2, ticks3) = (2,4,6)` (Moderate Variation)
+![](images/tick-2-4-6.png)
+`(ticks1, ticks2, ticks3) = (1,6,12)` (Large Variation)
 ![](images/tick-1-6-12.PNG)  
