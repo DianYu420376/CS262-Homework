@@ -38,3 +38,5 @@ In this section, we will vary the parameter `(ticks1, ticks2, ticks3)`, for each
 ![](images/tick-2-4-6.png)
 `(ticks1, ticks2, ticks3) = (1,6,12)` (Large Variation)
 ![](images/tick-1-6-12.PNG)  
+
+Based on the simulation results, the larger speed variation is, the smaller the critical value of `send_prob` (defined in previous section) will be. For smaller speed variation, the speed of processing the messages are relatively the same across different machines, thus message won't queue up and the time stamps align with the time stamp of the fastest machine. However for large variation, inboxes of the slower machines will easily be filled up with un-processed messages. Notice that for large variation `(ticks1, ticks2, ticks3) = (1,6,12)`, not only the time stamp of Machine 1 is slower, Machine 2's time stamp is also slightly slower than Machine 3's, because the inbox of Machine 2 is also slightly queued up. If we further increase `send_prob`, it can be expected that the difference will become even more obvious.
