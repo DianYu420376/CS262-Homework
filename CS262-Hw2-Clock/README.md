@@ -16,8 +16,16 @@ We use the module `multiprocessing.Queue` to construct all three virtual machine
 In this notebook we are going to discuss how the logical clock for each machine will be affected by the parameters `(ticks1, ticks2, ticks3)` and `send_prob`.
 
 #### How the logical clock change with `send_prob`?
-Let's first look at the case where `(ticks1, ticks2, ticks3) = (2,4,6)` and `send_prob = 30%`
-![](images/tick-2-4-6.png)
+Let's first look at the case where `(ticks1, ticks2, ticks3) = (2,4,6)`. The following figure shows how the time stamps of each machine changes with global time, `send_prob` is setted to be 3%, 30%, 60%, 90% from left to right:
+![](images/tick-2-4-6.png)  
+
+By looking at the first two figures on the left, we may conclude that the machine with the fastest speed will dominate the numbering of the time stamp becuase the three lines almost aligned with each other. This makes sense because:
+...
+Additionally, notice that there's a 'staircase-like' shape in the curve of Machine 1 and 2 when `send_prob = 3%`, while the curve is smoother for `send_prob = 30%`. This can be explained by the fact that the more external interaction, the more frequent the time stamps of slower machines will jump in order to catch up with the time stamp of faster machine.  
+
+However, if we look at the two figures on the right, the 
+
+Based on these observations we conclude that the behav
 
 #### How the logical clock change with  `(ticks1, ticks2, ticks3)`?
 ![](images/tick-4-5-6.PNG)  
