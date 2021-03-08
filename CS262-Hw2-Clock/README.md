@@ -19,13 +19,13 @@ In this notebook we are going to discuss how the logical clock for each machine 
 Let's first look at the case where `(ticks1, ticks2, ticks3) = (2,4,6)`. The following figure shows how the time stamps of each machine changes with global time, `send_prob` is setted to be 3%, 30%, 60%, 90% from left to right:
 ![](images/tick-2-4-6.png)  
 
-By looking at the first two figures on the left, we may conclude that the machine with the fastest speed will dominate the numbering of the time stamp becuase the three lines almost aligned with each other. This makes sense because:
-...
+By looking at the first two figures on the left, we may conclude that the machine with the fastest speed will dominate the numbering of the time stamp becuase the three lines almost aligned with each other. This makes sense because when receiving a message the time stamp is calculated `max(time_stamp_of_the_message, local_time_stamp) +1`, which implies that the time stamp at every machine will increase with the time stamp of the fastest one.
+
 Additionally, notice that there's a 'staircase-like' shape in the curve of Machine 1 and 2 when `send_prob = 3%`, while the curve is smoother for `send_prob = 30%`. This can be explained by the fact that the more external interaction, the more frequent the time stamps of slower machines will jump in order to catch up with the time stamp of faster machine.  
 
-However, if we look at the two figures on the right, the 
+However, if we look at the two figures on the right, the time stamp for Machine 1 no longer align with the other two. This is because with the increasing of external event, the speed of getting an external message exceeds the capacity of Machine 1 to handle them. Thus un-processed messages will queue up, which means that message being processed at current time is sent at an earlier time, this 'slows down' the time stamp of Machine 1.
 
-Based on these observations we conclude that the behav
+Based on these observations we conclude that there's a 'phase transition' in the behavior of the time stamps as `send_prob` grows larger. The critical point is the point where messages start to queue up in the inbox of the slower machines. If `send_prob` is smaller than this value, then the evolving of time stamps are going to roughly follow the time stamp of the fastest machine. If `send_prob` is larger than this value, messages are going to queue up and we might observe behavior as shown in the two figures on the right.
 
 #### How the logical clock change with  `(ticks1, ticks2, ticks3)`?
 ![](images/tick-4-5-6.PNG)  
