@@ -6,10 +6,13 @@ Messages sent to the AS needs to be in the following form:
 
 (Pub/Sub Code, Action Code, *Args)
 
-Pub/Sub Code takes value from {0,1}, where 1 denotes publisher registration and 0 denotes subscriber registration.
+Pub/Sub Code takes value from {0,1,-1}, where
+    1 - Denotes publisher authentication (Publisher --> AS)
+    0 - Denotes subscriber authentication (Subscriber --> AS)
+    -1 - Denote AS authentication (AS --> Publisher/Subscriber)
 
 Action Code takes value from {1,2,3}:
-	1 - Certification process, where a publisher/subscriber send certification to AS and AS send back a random number showing that the certification has been approved.
+	1 - Certification process, where a publisher/subscriber send certification to AS and AS send back a random number showing that the certification has been approved. (NOTE: The response message use the same pub/sub code and action code as the original message)
 	2 - Verify signature, where the publisher/subscriber send signature to AS and AS send back a flag indicating whether the verification has succeed. (For subscriber only, AS is also going to send a list of registered publisher certificates)
 	3 - Send topic key, where the publisher/subscriber send a message to AS to require topic keys, and AS send back required information.
 
