@@ -17,7 +17,7 @@ class Connection(Queue):
         while True:
             try:
                 msg = self.get(block=block, timeout=timeout)
-                return client_conn  # Used for client to receive message from server
+                return msg
             except Empty:
                 print('Empty message queue')
                 continue
@@ -34,7 +34,11 @@ class ServerSocket(Queue):
         while True:
             try:
                 client_conn = self.get(block=block, timeout=timeout)
-                return client_conn # Used for client to receive message from server
+                if type(client_conn).__name__ == 'Connection':
+                    return client_conn # Used for client to receive message from server
+                else:
+                    print('Not a valid connection, please try to reconnect.')
+                    return
             except Empty:
                 continue
 
@@ -86,34 +90,48 @@ class AuthenticationServerThread(threading.Thread):
         elif action_code == 3:
             self.send_topic_key(msg)
 
-
-        # Interpret message, send it to different functions, e.g. certification, signature, topic
-        pass
+        # TODO: what if new publisher joined and the AS need to inform subscribers of that change?
+        # if self.status == SIGNED:
+        #     self.update_publisher_lst
 
     def certify(self, msg):
+        '''
+        :param msg: (pub_sub_code, action_code, certificate), where certificate is a 4-dimensional tuple: certification = (machine_id, machine_pubkey, source, signature)
+        :return: None, AS is going to send a message to self.out_conn, message takes the form: (pub_sub_code, action_code, flag, reply), where reply is going to be the hash code of a random number if certification has succeed
+        '''
         pub_sub_code = msg[0]
         action_code = msg[1]
         certificate = msg[2]
-        publisher = certificate[0]
-        publisher_pubkey = certificate[1]
+        machine_id = certificate[0]
+        machine_pubkey = certificate[1]
         source = certificate[2]
         signature = certificate[3]
-        message = publisher+publisher_pubkey+source
-        source_pubkey = None # TODO: complete this part
-        try:
-            outcome = rsa.verify(message, signature, source_pubkey)
-            flag = SUCCEED
-            randnumber = rsa.randnum.read_random_bits(128)
-            reply = rsa.compute_hash(randnumber,'SHA-1')
-            self.status = CERTIFIED
-            self.buffer = (randnumber, publisher_pubkey)
-        except:
+        message = machine_id+machine_pubkey+source
+        source_pubkey = get_source_key(source, self.authentication_manager) # TODO: finish this part later, check whether the source is reliable and get the public key of the source
+        if not source_pubkey:
             flag = FAILED
-            reply = 'Certification has failed'
+            reply = 'Unrecognized Source. Certification has failed.'
+        else:
+            try:
+                outcome = rsa.verify(message, signature, source_pubkey)
+                flag = SUCCEED
+                randnumber = rsa.randnum.read_random_bits(128)
+                reply = rsa.compute_hash(randnumber,'SHA-1')
+                self.status = CERTIFIED
+                self.buffer = (randnumber, certificate)
+            except rsa.pkcs1.VerificationError:
+                flag = FAILED
+                reply = 'Cannot verify signature. Certification has failed'
 
         self.out_conn.send((pub_sub_code, action_code, flag, reply))
 
     def sign(self, msg):
+        '''
+        :param msg: (pub_sub_code, action_code, signature)
+        :return: None, AS is going to send a message to self.out_conn.
+                    If the message is for the publisher, it takes the form: (pub_sub_code, action_code, flag, reply)
+                    If the message is for the subcriber, it takes the form: (pub_sub_code, action_code, flag, reply, publisher_lst), where publisher_lst is a list of registered publisher with their certificates.
+        '''
         pub_sub_code = msg[0]
         action_code = msg[1]
         if self.status != CERTIFIED:
@@ -122,34 +140,46 @@ class AuthenticationServerThread(threading.Thread):
         else:
             signature = msg[2]
             randnumber = self.buffer[0]
-            publisher_pubkey = self.buffer[1]
-            outcome = rsa.verify(randnumber, signature, publisher_pubkey)
-            if outcome:
+            certificate = self.buffer[1]
+            machine_pubkey = certificate[1]
+            try:
+                outcome = rsa.verify(randnumber, signature, machine_pubkey)
                 flag = SUCCEED
-                reply = 'Signature has been verified, registration succeeed.'
                 self.status = SIGNED
-                # TODO: add publisher info to authentication manager
-            else:
+                reply = 'Signature has been verified, registration succeed.'
+                if pub_sub_code == 1:
+                    self.authentication_manager.add_publisher(certificate[0], certificate)
+                elif pub_sub_code == 0:
+                    self.authentication_manager.add_subscriber(certificate[0])
+                    self.outconn.send((pub_sub_code, action_code, flag, reply, self.authentication_manager.publisher_lst)) # send publisher certificates to subscriber
+            except rsa.pkcs1.VerificationError:
                 flag = FAILED
                 reply = 'Signature verification failed, registration failed'
         self.out_conn.send((pub_sub_code, action_code, flag, reply))
 
-    def send_topic_key(self, topic_id):
+    def send_topic_key(self, msg):
         pub_sub_code = msg[0]
         action_code = msg[1]
+        topic_id_lst = msg[2]
         if self.status != SIGNED:
             flag = FAILED
             reply = 'please register first'
         else:
             flag = SUCCEED
-            reply = '' # TODO add topic key
+            reply = {topic_id:self.authentication_manager.topic_lst.get(topic_id) for topic_id in topic_id_lst}
+            machine_id = self.buffer[1][0]
+            if pub_sub_code == 1:
+                [self.authentication_manager.publisher_lst[machine_id].append(topic_id) for topic_id in topic_id_lst
+                    if topic_id not in self.authentication_manager.publisher_lst[machine_id]]  # add topic_id to publisher_list
+            elif pub_sub_code == 0:
+                [self.authentication_manager.subscriber_lst[machine_id].append(topic_id) for topic_id in topic_id_lst
+                    if topic_id not in self.authentication_manager.subscriber_lst[machine_id]]  # add topic_id to publisher_list
         self.out_conn.send((pub_sub_code, action_code, flag, reply))
 
-    def send_publisher_list(self):
-        pass
+    #def send_publisher_list(self):
+    #   pass
 
     # def remove_publisher/ remove_subscriber...
-
 
 sk = ServerSocket()
 
