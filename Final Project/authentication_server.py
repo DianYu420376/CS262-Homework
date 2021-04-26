@@ -6,6 +6,7 @@ import threading
 # import select
 # import sys
 import rsa
+import random
 
 
 class Connection(Queue):
@@ -18,6 +19,7 @@ class Connection(Queue):
                 msg = self.get(block=block, timeout=timeout)
                 return client_conn  # Used for client to receive message from server
             except Empty:
+                print('Empty message queue')
                 continue
 
     def send(self, msg):
@@ -49,12 +51,18 @@ SIGNED = 1
 SUCCEED = 1
 FAILED = -1
 
+
 class AuthenticationManager():
-    def __init__(self):
-        self.machine_lst = []
-        self.publisher_lst = []
-        self.subscriber_lst = []
-        self.topic_lst = []
+    def __init__(self, topic_lst):
+        self.publisher_lst = {}
+        self.subscriber_lst = {}
+        self.topic_lst = topic_lst
+
+    def add_publisher(self, publisher_name, publisher_certificate, publisher_topics = []):
+        self.publisher_lst[publisher_name] = (publisher_certificate, publisher_topics)
+
+    def add_subscriber(self, subscriber_name, subscriber_topics = []):
+        self.subscriber_lst[subscriber_name] = subscriber_topics
 
 
 class AuthenticationServerThread(threading.Thread):
@@ -69,12 +77,22 @@ class AuthenticationServerThread(threading.Thread):
 
     def run(self):
         msg = self.in_conn.recv()
+        pub_sub_code = msg[0]
+        action_code = msg[1]
+        if action_code == 1:
+            self.certify(msg)
+        elif action_code == 2:
+            self.sign(msg)
+        elif action_code == 3:
+            self.send_topic_key(msg)
+
+
         # Interpret message, send it to different functions, e.g. certification, signature, topic
         pass
 
     def certify(self, msg):
         pub_sub_code = msg[0]
-        action_cdoe = msg[1]
+        action_code = msg[1]
         certificate = msg[2]
         publisher = certificate[0]
         publisher_pubkey = certificate[1]
@@ -82,36 +100,50 @@ class AuthenticationServerThread(threading.Thread):
         signature = certificate[3]
         message = publisher+publisher_pubkey+source
         source_pubkey = None # TODO: complete this part
-        outcome = rsa.verify(message, signature, source_pubkey)
-        if outcome:
+        try:
+            outcome = rsa.verify(message, signature, source_pubkey)
             flag = SUCCEED
-            reply = randnumber
+            randnumber = rsa.randnum.read_random_bits(128)
+            reply = rsa.compute_hash(randnumber,'SHA-1')
             self.status = CERTIFIED
             self.buffer = (randnumber, publisher_pubkey)
-        else:
+        except:
             flag = FAILED
             reply = 'Certification has failed'
-        self.out_conn.send((pub_sub_code, action_cdoe, flag, reply))
+
+        self.out_conn.send((pub_sub_code, action_code, flag, reply))
 
     def sign(self, msg):
         pub_sub_code = msg[0]
-        action_cdoe = msg[1]
-        signature = msg[2]
-        randnumber = self.buffer[0]
-        publisher_pubkey = self.buffer[1]
-        outcome = rsa.verify(randnumber, signature, publisher_pubkey)
-        if outcome:
-            flag = SUCCEED
-            reply = 'Signature has been verified, registration succeeed.'
-            self.status = SIGNED
-            # TODO: add publisher info to authentication manager
-        else:
+        action_code = msg[1]
+        if self.status != CERTIFIED:
             flag = FAILED
-            reply = 'Signature verification failed, registration failed'
-        self.out_conn.send((pub_sub_code, action_cdoe, flag, reply))
+            reply = 'Please send certification first.'
+        else:
+            signature = msg[2]
+            randnumber = self.buffer[0]
+            publisher_pubkey = self.buffer[1]
+            outcome = rsa.verify(randnumber, signature, publisher_pubkey)
+            if outcome:
+                flag = SUCCEED
+                reply = 'Signature has been verified, registration succeeed.'
+                self.status = SIGNED
+                # TODO: add publisher info to authentication manager
+            else:
+                flag = FAILED
+                reply = 'Signature verification failed, registration failed'
+        self.out_conn.send((pub_sub_code, action_code, flag, reply))
 
     def send_topic_key(self, topic_id):
-        pass
+        pub_sub_code = msg[0]
+        action_code = msg[1]
+        if self.status != SIGNED:
+            flag = FAILED
+            reply = 'please register first'
+        else:
+            flag = SUCCEED
+            reply = '' # TODO add topic key
+        self.out_conn.send((pub_sub_code, action_code, flag, reply))
 
     def send_publisher_list(self):
         pass

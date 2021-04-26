@@ -17,3 +17,20 @@ Action Code takes value from {1,2,3}:
 	3 - Send topic key, where the publisher/subscriber send a message to AS to require topic keys, and AS send back required information.
 
 *Args are other inputs needed for completing corresponding actions.
+
+
+
+Response sent back from AS takes the following form:
+
+(Pub/Sub Code, Action Code, Flag, *Args)
+
+where Pub/Sub Code and Action Code have to be the same as the message it reponses to, Flag denotes whether the process is successful, *Args are other output needed for the reply.
+
+
+Authentication Manager:
+
+All the info about topic keys and registered machines are stored in a class 'AuthenticationManager'. The authentic manager stores the following data:
+
+1. Session keys: Dictionary {topic name: topic key}
+2. Publisher list: Dictionary {publisher name: (Certificate, publishing topics)}
+3. Subscriber list: Dictionary {subscriber name: subscription topics}
