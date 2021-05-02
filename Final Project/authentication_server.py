@@ -59,17 +59,43 @@ FAILED = -1
 
 
 class AuthenticationManager():
-    def __init__(self, topic_lst, source_dict):
-        self.publisher_lst = {}
-        self.subscriber_lst = {}
-        self.topic_lst = topic_lst
-        self.source_dict = source_dict
+    def __init__(self, topic_dict, source_dict):
+        # self.publisher_lst = {}
+        # self.subscriber_lst = {}
+        self.topic_dict = topic_dict # {topic_name: {'topic_channel': channel(Queue), 'topic_key': topic_key, 'publisher': None, 'subscriber_lst': []}}
+        self.source_dict = source_dict # {source_name: source_public_key}
 
-    def add_publisher(self, publisher_name, publisher_certificate, publisher_topics = []):
-        self.publisher_lst[publisher_name] = (publisher_certificate, publisher_topics)
+    def add_publisher(self, publisher_certificate, publisher_topics):
+        sub_dict = {}
+        for publisher_topic in publisher_topics:
+            topic = self.topic_dict.get(publisher_topic)
+            if not topic:
+                flag = FAILED
+                reply = 'Topic name doesn\'t exist.'
+                return (flag, reply)
+            if topic['publisher'] is not None:
+                flag = FAILED
+                reply = 'This topic has already been registered by another publisher'
+                return (flag, reply)
+            topic['publisher'] = {'publisher_name': publisher_certificate[0], 'publisher_key:': publisher_certificate[1]}
+            sub_dict[publisher_topic] = {'topic_channel': topic['topic_channel'], 'topic_key': topic['topic_key']}
+        flag = SUCCEED
+        reply = sub_dict
+        return (flag, reply)
 
-    def add_subscriber(self, subscriber_name, subscriber_topics = []):
-        self.subscriber_lst[subscriber_name] = subscriber_topics
+    def add_subscriber(self, subscriber_certificate, subscriber_topics):
+        sub_dict = {}
+        for subscriber_topic in subscriber_topics:
+            topic = self.topic_dict.get(subscriber_topic)
+            if not topic:
+                flag = FAILED
+                reply = 'Topic name doesn\'t exist.'
+                return (flag, reply)
+            topic['subscriber_lst'].append({'subscriber_name': subscriber_certificate[0], 'subscriber_key': subscriber_certificate[1]})
+            sub_dict[subscriber_topic] = {'topic_channel': topic['topic_channel'], 'publisher': topic['publisher'], 'topic_key': topic['topic_key']}
+        flag = SUCCEED
+        reply = sub_dict
+        return (flag, reply)
 
     def get_source_key(self, source):
         return self.source_dict.get(source)
@@ -97,6 +123,8 @@ class AuthenticationServerThread(threading.Thread):
                 self.sign(msg)
             elif action_code == 3:
                 self.send_topic_key(msg)
+            elif action_code == 4:
+                self.server_authentication(msg)
 
         # TODO: what if new publisher joined and the AS need to inform subscribers of that change?
         # if self.status == SIGNED:
@@ -116,7 +144,7 @@ class AuthenticationServerThread(threading.Thread):
         signature = certificate[3]
         message = machine_id+str(machine_pubkey)+source
         message = message.encode()
-        source_pubkey = self.authentication_manager.get_source_key(source) # TODO: finish this part later, check whether the source is reliable and get the public key of the source
+        source_pubkey = self.authentication_manager.get_source_key(source)
         if not source_pubkey:
             flag = FAILED
             reply = 'Unrecognized Source. Certification has failed.'
@@ -156,11 +184,11 @@ class AuthenticationServerThread(threading.Thread):
                 flag = SUCCEED
                 self.status = SIGNED
                 reply = 'Signature has been verified, registration succeed.'
-                if pub_sub_code == 1:
-                    self.authentication_manager.add_publisher(certificate[0], certificate)
-                elif pub_sub_code == 0:
-                    self.authentication_manager.add_subscriber(certificate[0])
-                    self.out_conn.send((pub_sub_code, action_code, flag, reply, self.authentication_manager.publisher_lst)) # send publisher certificates to subscriber
+                # if pub_sub_code == 1:
+                #     self.authentication_manager.add_publisher(certificate[0], certificate)
+                # elif pub_sub_code == 0:
+                #     self.authentication_manager.add_subscriber(certificate[0])
+                #     self.out_conn.send((pub_sub_code, action_code, flag, reply, self.authentication_manager.publisher_lst)) # send publisher certificates to subscriber
             except rsa.pkcs1.VerificationError:
                 flag = FAILED
                 reply = 'Signature verification failed, registration failed'
@@ -174,19 +202,20 @@ class AuthenticationServerThread(threading.Thread):
             flag = FAILED
             reply = 'please register first'
         else:
-            flag = SUCCEED
-            reply = {topic_id:self.authentication_manager.topic_lst.get(topic_id) for topic_id in topic_id_lst}
-            machine_id = self.buffer[1][0]
+            machine_certificate = self.buffer[1]
             if pub_sub_code == 1:
-                [self.authentication_manager.publisher_lst[machine_id].append(topic_id) for topic_id in topic_id_lst
-                    if topic_id not in self.authentication_manager.publisher_lst[machine_id]]  # add topic_id to publisher_list
+                flag,reply = self.authentication_manager.add_publisher(machine_certificate, topic_id_lst)
             elif pub_sub_code == 0:
-                [self.authentication_manager.subscriber_lst[machine_id].append(topic_id) for topic_id in topic_id_lst
-                    if topic_id not in self.authentication_manager.subscriber_lst[machine_id]]  # add topic_id to publisher_list
+                flag,reply =self.authentication_manager.add_subscriber(machine_certificate, topic_id_lst)
         self.out_conn.send((pub_sub_code, action_code, flag, reply))
 
-    def server_authentication(self): # TODO: Authenticate the server
-        pass
+    def server_authentication(self, msg): # TODO: Authenticate the server
+        pub_sub_code = msg[0]
+        action_code = msg[1]
+        rand_number = msg[2]
+        signature = rsa.sign(rand_number, machine_privkey, 'SHA-1')
+        msg = (pub_sub_code, action_code, signature)
+        self.out_conn.send(msg)
 
     #def send_publisher_list(self):
     #   pass
@@ -194,17 +223,37 @@ class AuthenticationServerThread(threading.Thread):
     # def remove_publisher/ remove_subscriber...
 
 sk = ServerSocket()
-topic_lst = [0,1,2,3]
+topic_key1 = rsa.newkeys(512)
+topic_key2 = rsa.newkeys(512)
+dict1 = {'topic_channel': Queue(), 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
+dict2 = {'topic_channel': Queue(), 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
+topic_dict = {'topic1':dict1, 'topic2':dict2}
 (pubkey1, privkey1) = rsa.newkeys(512) # public key and privkey for source1
 (pubkey2, privkey2) = rsa.newkeys(512) # public key and privkey for source1
 
 source_dict = {'source1': pubkey1, 'source2': pubkey2}
-authentication_manager = AuthenticationManager(topic_lst, source_dict)
+authentication_manager = AuthenticationManager(topic_dict, source_dict)
 
 if __name__ == '__main__':
+# A VERY SIMPLE UNIT TEST
     print("Main Thread started")
-    socket_status = {}
     #while True:
+
+    # INITIALIZATION
+    sk = ServerSocket()
+    topic_key1 = rsa.newkeys(512)
+    topic_key2 = rsa.newkeys(512)
+    dict1 = {'topic_channel': Queue(), 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
+    dict2 = {'topic_channel': Queue(), 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
+    topic_dict = {'topic1': dict1, 'topic2': dict2}
+    (pubkey1, privkey1) = rsa.newkeys(512)  # public key and privkey for source1
+    (pubkey2, privkey2) = rsa.newkeys(512)  # public key and privkey for source1
+
+    source_dict = {'source1': pubkey1, 'source2': pubkey2}
+    authentication_manager = AuthenticationManager(topic_dict, source_dict)
+
+# ------------------------------------ TEST PUBLISHER ------------------------------------------------------------------
+
     client_conn = Connection() # IDEALLY THIS LINE SHOULD BE DONE IN A SEPARATE FILE BUT I DON'T KNOW HOW TO DO IT   TAT
     sk.put(client_conn) # IDEALLY THIS LINE SHOULD BE DONE IN A SEPARATE FILE BUT I DON'T KNOW HOW TO DO IT   TAT, THE MAIN DIFFICULTY IS SHARING THE SK THROUGH FILE
     client_conn_AS = sk.listen()
@@ -218,7 +267,7 @@ if __name__ == '__main__':
         authentication_thread.start()
 
 
-        pub_sub_code = 0 # This is the subscriber
+        pub_sub_code = 1 # This is a publisher
 
         # Certification step
         action_code = 1
@@ -244,12 +293,70 @@ if __name__ == '__main__':
             action_code = 2
             msg = (pub_sub_code, action_code, signature)
             server_conn.send(msg)
+            msg = client_conn.recv()
+            print(msg)
 
-        # Registration complete
+        # Registration complete, send topic list to AS
+        topic_id_lst = ['topic1']
+        action_code = 3
+        msg = (pub_sub_code, action_code, topic_id_lst)
+        server_conn.send(msg)
         msg = client_conn.recv()
         print(msg)
 
+
     time.sleep(1)
+
+# ----------------------------------TEST SUBSCRIBER -----------------------------------------
+
+    client_conn = Connection()  # IDEALLY THIS LINE SHOULD BE DONE IN A SEPARATE FILE BUT I DON'T KNOW HOW TO DO IT   TAT
+    sk.put(client_conn)  # IDEALLY THIS LINE SHOULD BE DONE IN A SEPARATE FILE BUT I DON'T KNOW HOW TO DO IT   TAT, THE MAIN DIFFICULTY IS SHARING THE SK THROUGH FILE
+    client_conn_AS = sk.listen()
+    if client_conn_AS:
+        print('got a connection request', type(client_conn_AS))
+        server_conn_AS = sk.accept(client_conn_AS)
+        server_conn = client_conn.recv()  # IDEALLY THIS LINE SHOULD BE DONE IN A SEPARATE FILE BUT I DON'T KNOW HOW TO DO IT   TAT
+        print('connection accepted', type(server_conn_AS))
+        # socket_status[server_conn.fileno()] = 0
+        authentication_thread = AuthenticationServerThread(server_conn_AS, client_conn_AS, authentication_manager)
+        authentication_thread.start()
+
+        pub_sub_code = 0  # This is a subscriber
+
+        # Certification step
+        action_code = 1
+        machine_id = '0123'
+        (machine_pubkey, machine_privkey) = rsa.newkeys(512)
+        source = 'source1'  # Assume that machine 0123 is from source1
+        source_pubkey = pubkey1
+        source_privkey = privkey1
+        message = machine_id + str(machine_pubkey) + source
+        message = message.encode()
+        signature = rsa.sign(message, source_privkey, 'SHA-1')
+        certificate = (machine_id, machine_pubkey, source, signature)
+        msg = (pub_sub_code, action_code, certificate)
+        server_conn.send(msg)
+
+        # Sign the random number and send it back
+        msg = client_conn.recv()
+        print(msg)
+        flag = msg[2]
+        if flag:
+            rand_number = msg[3]
+            signature = rsa.sign(rand_number, machine_privkey, 'SHA-1')
+            action_code = 2
+            msg = (pub_sub_code, action_code, signature)
+            server_conn.send(msg)
+            msg = client_conn.recv()
+            print(msg)
+
+            # Registration complete, send topic list to AS
+            topic_id_lst = ['topic2']
+            action_code = 3
+            msg = (pub_sub_code, action_code, topic_id_lst)
+            server_conn.send(msg)
+            msg = client_conn.recv()
+            print(msg)
 
     #relay_thread = Message_relay_thread(server_conn, relay_sk)
     #relay_thread.start()
