@@ -9,7 +9,6 @@ from helpers import load_private_key, load_public_key
 
 class Subscriber():
     def __init__(self, sub_name: str,src_name: str, sks:str, trusted_folder:str, client_conn, server_conn):
-        # todo: how do I compare private keys?
         self.sub_name = sub_name
         self.pk, self.sk = rsa.newkeys(512)
         self.sks = load_private_key(sks)
@@ -18,15 +17,14 @@ class Subscriber():
         self.publisher_certificate_lst = []
         self.server_conn = server_conn
         self.client_conn = client_conn
-        # is_source_trusted()
 
-    # returns tuple (subscriber_name, subscriber public key, source, signature)
     #TODO write error messages at different steps
     def register(self):
         def generate_certificate():
             msg = self.sub_name + str(self.pk) + self.src_name
             cipher = rsa.sign(msg.encode(), self.sks, 'SHA-1')
             return (self.sub_name,self.pk,self.src_name,cipher)
+
         certificate = generate_certificate()
 
         outgoing_msg_to_server = (0, 1, certificate)
@@ -37,24 +35,11 @@ class Subscriber():
         print("reply from server received")
 
         if (flag==1):
-            print("YAYY SUCESSFUL")
             signature = rsa.sign(reply, self.sk, 'SHA-1')
             outgoing_msg_to_server = (0, 2, signature) #2 because now we are in verify stage
             self.server_conn.send(outgoing_msg_to_server)
             pub_sub_code, action_code, flag, reply = self.client_conn.recv()
             print(reply)
-
-            
-
-    # send signature to the server for certification purposes
-    def send_signature(self, r):
-      hash = int.from_bytes(sha512(r).digest(), byteorder='big')
-      signature = pow(hash, self.private_key.d, self.private_key.n)
-      return (hex(signature))
-
-    def receive_publisher_certificates(self):
-      # the 5th element in msg is the publisher list
-      pass
 
 
 #Initialization
@@ -72,8 +57,6 @@ authentication_manager = AuthenticationManager(topic_dict, source_dict)
 
 
 def main(): 
-
-
     sub1_client_conn = Connection()
     sub1_server_conn = Connection()
     sub = Subscriber("naina", "source1", "trusted_keys/trusted1", "trusted_keys", sub1_client_conn, sub1_server_conn)
