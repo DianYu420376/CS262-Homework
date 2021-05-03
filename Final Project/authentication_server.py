@@ -138,10 +138,10 @@ class AuthenticationServerThread(threading.Thread):
         pub_sub_code = msg[0]
         action_code = msg[1]
         certificate = msg[2]
-        machine_id = certificate[0]
-        machine_pubkey = certificate[1]
-        source = certificate[2]
-        signature = certificate[3]
+        machine_id = certificate[0] # str
+        machine_pubkey = certificate[1] # rsa.Publickey
+        source = certificate[2] # str
+        signature = certificate[3] # see below
         message = machine_id+str(machine_pubkey)+source
         message = message.encode()
         source_pubkey = self.authentication_manager.get_source_key(source)
@@ -195,6 +195,11 @@ class AuthenticationServerThread(threading.Thread):
         self.out_conn.send((pub_sub_code, action_code, flag, reply))
 
     def send_topic_key(self, msg):
+        '''
+
+        :param msg:
+        :return:
+        '''
         pub_sub_code = msg[0]
         action_code = msg[1]
         topic_id_lst = msg[2]
@@ -222,6 +227,7 @@ class AuthenticationServerThread(threading.Thread):
 
     # def remove_publisher/ remove_subscriber...
 
+# INITIALIZATION
 sk = ServerSocket()
 topic_key1 = rsa.newkeys(512)
 topic_key2 = rsa.newkeys(512)
@@ -239,21 +245,25 @@ if __name__ == '__main__':
     print("Main Thread started")
     #while True:
 
-    # INITIALIZATION
-    sk = ServerSocket()
-    topic_key1 = rsa.newkeys(512)
-    topic_key2 = rsa.newkeys(512)
-    dict1 = {'topic_channel': Queue(), 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
-    dict2 = {'topic_channel': Queue(), 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
-    topic_dict = {'topic1': dict1, 'topic2': dict2}
-    (pubkey1, privkey1) = rsa.newkeys(512)  # public key and privkey for source1
-    (pubkey2, privkey2) = rsa.newkeys(512)  # public key and privkey for source1
 
-    source_dict = {'source1': pubkey1, 'source2': pubkey2}
-    authentication_manager = AuthenticationManager(topic_dict, source_dict)
-
+# ### --- STRUCTURE FOR MAIN TESTING
+# pub1_client_conn = Connection()
+# pub1_server_conn = Connection()
+# sub1_client_conn = Connection()
+# sub1_server_conn = Connection()
+# ##....
+#
+# pub1 = Publisher(pub1_client_conn, pub1_server_conn, *Args)
+# sub1 = Subscriber(sub1_client_conn, sub1_server_conn, *Args)
+# pub1_AS_thread = AuthenticationServerThread(pub1_client_conn, pub1_server_conn, authentication_manager)
+# sub1_AS_thread = AuthenticationServerThread(sub1_client_conn, sub1_server_conn, authentication_manager)
+# ## ...
+#
+# pub1_AS_thread.start()
+# sub1_AS_thread.start()
+# ## ...
+# TODO: terminate thread
 # ------------------------------------ TEST PUBLISHER ------------------------------------------------------------------
-
     client_conn = Connection() # IDEALLY THIS LINE SHOULD BE DONE IN A SEPARATE FILE BUT I DON'T KNOW HOW TO DO IT   TAT
     sk.put(client_conn) # IDEALLY THIS LINE SHOULD BE DONE IN A SEPARATE FILE BUT I DON'T KNOW HOW TO DO IT   TAT, THE MAIN DIFFICULTY IS SHARING THE SK THROUGH FILE
     client_conn_AS = sk.listen()
@@ -351,7 +361,7 @@ if __name__ == '__main__':
             print(msg)
 
             # Registration complete, send topic list to AS
-            topic_id_lst = ['topic2']
+            topic_id_lst = ['topic1']
             action_code = 3
             msg = (pub_sub_code, action_code, topic_id_lst)
             server_conn.send(msg)

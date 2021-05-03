@@ -15,6 +15,7 @@ Action Code takes value from {1,2,3}:
 	1 - Certification process, where a publisher/subscriber send certification to AS and AS send back a random number showing that the certification has been approved. (NOTE: The response message use the same pub/sub code and action code as the original message)
 	2 - Verify signature, where the publisher/subscriber send signature to AS and AS send back a flag indicating whether the verification has succeed. (For subscriber only, AS is also going to send a list of registered publisher certificates)
 	3 - Send topic key, where the publisher/subscriber send a message to AS to require topic keys, and AS send back required information.
+    4 -
 
 *Args are other inputs needed for completing corresponding actions.
 
@@ -34,3 +35,7 @@ All the info about topic keys and registered machines are stored in a class 'Aut
 1. Session keys: Dictionary {topic name: topic key}
 2. Publisher list: Dictionary {publisher name: (Certificate, publishing topics)}
 3. Subscriber list: Dictionary {subscriber name: subscription topics}
+
+# Connection
+Create connection (class Connection)
+Initialize
