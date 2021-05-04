@@ -72,8 +72,8 @@ class Subscriber():
 #Initialization
 topic_key1 = rsa.newkeys(512)
 topic_key2 = rsa.newkeys(512)
-dict1 = {'topic_channel': Queue(), 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
-dict2 = {'topic_channel': Queue(), 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
+dict1 = {'topic_channel': [], 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
+dict2 = {'topic_channel': [], 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
 topic_dict = {'topic1':dict1, 'topic2':dict2}
 (pubkey1, privkey1) = rsa.newkeys(512) # public key and privkey for source1
 (pubkey2, privkey2) = rsa.newkeys(512) # public key and privkey for source1

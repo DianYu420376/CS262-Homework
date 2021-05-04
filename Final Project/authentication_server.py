@@ -62,7 +62,7 @@ class AuthenticationManager():
     def __init__(self, topic_dict, source_dict):
         # self.publisher_lst = {}
         # self.subscriber_lst = {}
-        self.topic_dict = topic_dict # {topic_name: {'topic_channel': channel(Queue), 'topic_key': topic_key, 'publisher': None, 'subscriber_lst': []}}
+        self.topic_dict = topic_dict # {topic_name: {'topic_channel': list of queues, 'topic_key': topic_key, 'publisher': None, 'subscriber_lst': []}}
         self.source_dict = source_dict # {source_name: source_public_key}
 
     def add_publisher(self, publisher_certificate, publisher_topics):
@@ -92,7 +92,8 @@ class AuthenticationManager():
                 reply = 'Topic name doesn\'t exist.'
                 return (flag, reply)
             topic['subscriber_lst'].append({'subscriber_name': subscriber_certificate[0], 'subscriber_key': subscriber_certificate[1]})
-            sub_dict[subscriber_topic] = {'topic_channel': topic['topic_channel'], 'publisher': topic['publisher'], 'topic_key': topic['topic_key']}
+            topic['topic_channel'].append(Queue())
+            sub_dict[subscriber_topic] = {'topic_channel': topic['topic_channel'][-1], 'publisher': topic['publisher'], 'topic_key': topic['topic_key']}
         flag = SUCCEED
         reply = sub_dict
         return (flag, reply)
@@ -197,8 +198,11 @@ class AuthenticationServerThread(threading.Thread):
     def send_topic_key(self, msg):
         '''
 
-        :param msg:
-        :return:
+        :param msg: (pub_sub_code, action_code, topic_id_lst), where topic_id_lst is a list of strings that contains name of topics
+        :return:None, AS is going to send a message to self.out_conn, it takes the form: (pub_sub_code, action_code, flag, reply)
+                   If flag is success, the reply is going to be a dictionary that contains information of the subscribed or published topics.
+                   For publisher, the dictionary takes the form {topic_name(str):{'topic_channel':list of queues, 'topic_key':PublicKey}}
+                   For subscriber, the dictionary takes the form {topic_name(str):{'topic_channel':list of queues, 'publisher': {'publisher_name':str, 'publisher_key':PublicKey} ,'topic_key':PublicKey}}
         '''
         pub_sub_code = msg[0]
         action_code = msg[1]
@@ -231,8 +235,8 @@ class AuthenticationServerThread(threading.Thread):
 sk = ServerSocket()
 topic_key1 = rsa.newkeys(512)
 topic_key2 = rsa.newkeys(512)
-dict1 = {'topic_channel': Queue(), 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
-dict2 = {'topic_channel': Queue(), 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
+dict1 = {'topic_channel': [], 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
+dict2 = {'topic_channel': [], 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
 topic_dict = {'topic1':dict1, 'topic2':dict2}
 (pubkey1, privkey1) = rsa.newkeys(512) # public key and privkey for source1
 (pubkey2, privkey2) = rsa.newkeys(512) # public key and privkey for source1
