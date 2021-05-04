@@ -17,6 +17,7 @@ class Subscriber():
         self.publisher_certificate_lst = []
         self.server_conn = server_conn
         self.client_conn = client_conn
+        self.topic_dict={}
 
     #TODO write error messages at different steps
     def register(self):
@@ -28,18 +29,44 @@ class Subscriber():
         certificate = generate_certificate()
 
         outgoing_msg_to_server = (0, 1, certificate)
-        print("sending message to server")
         self.server_conn.send(outgoing_msg_to_server) 
-        print("message to server has been sent")
         pub_sub_code, action_code, flag, reply = self.client_conn.recv()
-        print("reply from server received")
 
         if (flag==1):
             signature = rsa.sign(reply, self.sk, 'SHA-1')
             outgoing_msg_to_server = (0, 2, signature) #2 because now we are in verify stage
             self.server_conn.send(outgoing_msg_to_server)
             pub_sub_code, action_code, flag, reply = self.client_conn.recv()
-            print(reply)
+            if (flag==1):
+              print('Signature has been verified, registration succeeds.')
+            else:
+              # TODO test this
+              raise Exception(reply)
+        else:
+          # TODO test this
+          raise Exception(reply)
+    
+    def subscribe(self, topic_id_lst):
+      outgoing_msg_to_server = (0, 3, topic_id_lst)
+      self.server_conn.send(outgoing_msg_to_server) 
+      pub_sub_code, action_code, flag, reply = self.client_conn.recv()
+      if (flag==1):
+          self.topic_dict=reply
+          print("Successfully subscribed to topics")
+      else:
+        raise Exception(reply)
+
+    
+    # how does a subscriber receive a message?
+    def receive_message():
+      pass
+
+        
+
+      
+      
+
+
 
 
 #Initialization
@@ -64,6 +91,7 @@ def main():
     sub1_AS_thread = AuthenticationServerThread(sub1_server_conn, sub1_client_conn, authentication_manager)
     sub1_AS_thread.start()
     sub.register()
+    sub.subscribe(['topic1', 'topic2'])
 
 
 
@@ -75,12 +103,4 @@ if __name__ == "__main__":
 
 
 # meeting discussion points
-# what is machine pubkey and machine source? is it just self stuff?
-# determine name of the sources too
-# is the entire topic list being sent by the server?
-# the way I am signing the initial message
-# why is there a queue for each topic?
-# how to access the server from the subscriber file?
- # how the test is gonna be run?
-
-  
+# how are the publisher keys being passed?
