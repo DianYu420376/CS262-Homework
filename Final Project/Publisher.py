@@ -8,7 +8,7 @@ from authentication_server import Connection, AuthenticationManager, Authenticat
 
 class Publisher:
     def __init__(self,server_conn:Connection, client_conn:Connection, topic_name: str,pub_name: str,src_name:str,sks:str,trusted_folder:str):
-        """Initiaization of Publisher by taking topic name, publisher's name, filename of publisher's pri/pub key
+        """Initiaization of Publisher by taking topic name, publisher's name, filename of publisher's pri/pub1 key
         source's private key
         Args:
             topic_name (str): topic's name
@@ -29,7 +29,7 @@ class Publisher:
         self.sks = load_private_key(sks)
         self.src_name = src_name
         self.session_key = ''
-        self.msg_q = Queue()
+        self.msg_q_lst = []
         # self.trusted_key_list = load_trusted_key(trusted_folder)
         
         # self.id = id
@@ -87,22 +87,23 @@ class Publisher:
         cipher = rsa.sign(r, self.sk)
         return cipher
 
-    def receive_registration_info(self,session_key, msg_q):
+    def receive_registration_info(self,session_key, msg_q_lst):
         self.session_key = session_key
-        self.msg_q = msg_q
+        self.msg_q_lst = msg_q_lst
 
     def publish_messeage(self,msg):
-        if session_key == '':
+        if self.session_key == '':
             print("session key is not estabilished and registered, failed to put message in queue")
             return
-        cipher = rsa.encrypt(self.pub_name+"||"+msg, self.session_key)
-        sig = rsa.sign(cipher, self.sk)
-        self.msg_q.put_nowait((self.topic_name,cipher,sig))
-        print(f"Message sent from {self.publisher_name}")
+        cipher = rsa.encrypt((self.pub_name+"||"+msg).encode(), self.session_key[0])
+        sig = rsa.sign(cipher, self.sk,'SHA-1')
+        for msg_q in self.msg_q_lst:
+            msg_q.put_nowait((self.topic_name,cipher,sig))
+        print(f"Message sent from {self.pub_name}")
     def load_trusted_key(self,folder):
         trusted_key = []
         for fn in glob.iglob(folder):
-            if 'pub' not in fn:
+            if 'pub1' not in fn:
                 key = load_pub_key(fn)
                 trusted_key.append(key)
         return trusted_key
@@ -121,7 +122,7 @@ if __name__ == '__main__':
     pub1_client_conn = Connection()
     pub1_server_conn = Connection()
     pub = Publisher(pub1_server_conn,pub1_client_conn,"topic1", '0123',"source1", "trusted_keys/trusted1",'trusted_keys')
-    # pub = Publisher('0213','source1')
+    # pub1 = Publisher('0213','source1')
     sub1_AS_thread = AuthenticationServerThread(pub1_server_conn, pub1_client_conn, authentication_manager)
     sub1_AS_thread.start()
     pub.register()

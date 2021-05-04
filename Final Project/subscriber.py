@@ -69,18 +69,7 @@ class Subscriber():
 
 
 
-#Initialization
-topic_key1 = rsa.newkeys(512)
-topic_key2 = rsa.newkeys(512)
-dict1 = {'topic_channel': [], 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
-dict2 = {'topic_channel': [], 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
-topic_dict = {'topic1':dict1, 'topic2':dict2}
-(pubkey1, privkey1) = rsa.newkeys(512) # public key and privkey for source1
-(pubkey2, privkey2) = rsa.newkeys(512) # public key and privkey for source1
 
-source_dict = {'source1': load_public_key("trusted_keys/trusted1.pub"), 'source2': load_public_key("trusted_keys/trusted2.pub"),
-'source3': load_public_key("trusted_keys/trusted2.pub")}
-authentication_manager = AuthenticationManager(topic_dict, source_dict)
 
 
 def main(): 
@@ -97,6 +86,19 @@ def main():
 
 if __name__ == "__main__":
   main()
+  # Initialization
+  topic_key1 = rsa.newkeys(512)
+  topic_key2 = rsa.newkeys(512)
+  dict1 = {'topic_channel': [], 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
+  dict2 = {'topic_channel': [], 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
+  topic_dict = {'topic1': dict1, 'topic2': dict2}
+  (pubkey1, privkey1) = rsa.newkeys(512)  # public key and privkey for source1
+  (pubkey2, privkey2) = rsa.newkeys(512)  # public key and privkey for source1
+
+  source_dict = {'source1': load_public_key("trusted_keys/trusted1.pub1"),
+                 'source2': load_public_key("trusted_keys/trusted2.pub1"),
+                 'source3': load_public_key("trusted_keys/trusted2.pub1")}
+  authentication_manager = AuthenticationManager(topic_dict, source_dict)
 
 
 
