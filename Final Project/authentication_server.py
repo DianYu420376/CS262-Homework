@@ -69,19 +69,27 @@ class AuthenticationManager():
     def add_publisher(self, publisher_certificate, publisher_topics):
         sub_dict = {}
         for publisher_topic in publisher_topics:
-            topic = self.topic_dict.get(publisher_topic)
-            if not topic:
+            if publisher_topic not in self.topic_dict:
+                # topic = self.topic_dict.get(publisher_topic)
+                # if not topic:
+                #     flag = FAILED
+                #     reply = 'Topic name doesn\'t exist.'
+                #     return (flag, reply)
+                # if topic['publisher'] is not None:
+                #     flag = FAILED
+                #     reply = 'This topic has already been registered by another publisher'
+                #     return (flag, reply)
+                secret_key = helpers.generate_secret_key_for_AES_cipher()
+                topic = {'topic_channel': [], 'publisher': None, 'subscriber_lst': [],'topic_key': secret_key}
+                topic['publisher'] = {'publisher_name': publisher_certificate[0], 'publisher_key:': publisher_certificate[1]}
+                # sub_dict[publisher_topic] = {'topic_channel': topic['topic_channel'], 'topic_key': topic['topic_key']}
+                flag = SUCCEED
+                # reply = sub_dict
+                self.topic_dict[publisher_topic] = topic
+                reply = {'topic_channel': topic['topic_channel'], 'topic_key': secret_key}
+            else:
                 flag = FAILED
-                reply = 'Topic name doesn\'t exist.'
-                return (flag, reply)
-            if topic['publisher'] is not None:
-                flag = FAILED
-                reply = 'This topic has already been registered by another publisher'
-                return (flag, reply)
-            topic['publisher'] = {'publisher_name': publisher_certificate[0], 'publisher_key:': publisher_certificate[1]}
-            sub_dict[publisher_topic] = {'topic_channel': topic['topic_channel'], 'topic_key': topic['topic_key']}
-        flag = SUCCEED
-        reply = sub_dict
+                reply = "This topic name has been registered"
         return (flag, reply)
 
     def add_subscriber(self, subscriber_certificate, subscriber_topics):

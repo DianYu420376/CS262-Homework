@@ -18,7 +18,7 @@ dict2 = {'topic_channel': [], 'topic_key': topic_key2, 'publisher': None, 'subsc
 dict3 = {'topic_channel': [], 'topic_key': topic_key3, 'publisher': None, 'subscriber_lst': []}
 
 topic_dict = {'topic1':dict1, 'topic2':dict2, 'topic3':dict3}
-authentication_manager = AuthenticationManager(topic_dict, source_dict)
+authentication_manager = AuthenticationManager({}, source_dict)
 
 # ------------------------------Creating three publishers ------------------------------------------------
 
