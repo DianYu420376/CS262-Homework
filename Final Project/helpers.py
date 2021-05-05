@@ -42,7 +42,7 @@ def encrypt_message(private_msg, encoded_secret_key, padding_character='{'):
 	# return encoded encrypted message
 	return encoded_encrypted_msg
 
-def decrypt_message(encoded_encrypted_msg, encoded_secret_key, padding_character='{'):
+def decrypt_message(encoded_encrypted_msg, encoded_secret_key, padding_character=b'{'):
 	# decode the encoded encrypted message and encoded secret key
 	secret_key = base64.b64decode(encoded_secret_key)
 	encrypted_msg = base64.b64decode(encoded_encrypted_msg)

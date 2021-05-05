@@ -1,11 +1,8 @@
-# from Cryptodome.PublicKey import RSA
-# from Cryptodome import Random
-# from hashlib import sha512
 from authentication_server import Connection, AuthenticationManager, AuthenticationServerThread
 from queue import Queue, Empty
 import rsa
 import os
-from helpers import load_private_key, load_public_key
+from helpers import load_private_key, load_public_key, decrypt_message
 from Publisher import Publisher
 import time
 
@@ -47,53 +44,56 @@ class Subscriber:
               print('Signature has been verified, registration succeeds.')
             else:
               # TODO test this
-              raise Exception(reply)
+              print(reply)
         else:
           # TODO test this
-          raise Exception(reply)
+          print(reply)
     
     def subscribe(self, topic_id_lst):
+
       outgoing_msg_to_server = (0, 3, topic_id_lst)
       self.server_conn.send(outgoing_msg_to_server) 
       pub_sub_code, action_code, flag, reply = self.client_conn.recv()
       if (flag==1):
           self.topic_dict=reply
+          print(reply)
           print("Successfully subscribed to topics")
       else:
-        raise Exception(reply)
+        print(reply)
 
-    
-    def decrypt_publisher_msg(self, msg):
-      # step 1: verify the identity of the publisher
-       # what is difference between encrypt and encode methods?
-      topic_name, cipher, signature = msg
-      topic_pk, topic_sk = topic_dict[topic_name]['topic_key']
-
-
-
-
-    # how does a subscriber receive a message?
-    # the subscriber receives messages of the form (i, c, s) in its queue
-    def receive_from_topic(self, topic_id):
-      print("inside receive function")
-      queue = topic_dict[topic_id]['topic_channel']
-      topic_pubkey, topic_privkey = topic_dict[topic_id]['topic_key']
-      # what is the publisher supposed to store?
-      topic_key = topic_dict[topic_id]['publisher']
 
   
     def receive(self):
+
+        # decrypts the message and returns the decoded message
+        def decrypt_publisher_msg(encoded_msg):
+          # verify the digital signature
+          topic_name, cipher, signature = msg
+          publisher_key = topic_dict[topic_name]['publisher']['publisher_key:']
+          if rsa.verify(cipher, signature, publisher_key)==False:
+            return 0, ''
+          session_key = topic_dict[topic_name]['topic_key']
+          decoded_msg=decrypt_message(cipher, session_key)
+          original_msg = decoded_msg.split(b'||')[1]
+          # original_msg is a binary string
+          return 1, original_msg.decode('ascii')
+
         while True:
           for topic in topic_dict:
             queue = topic_dict[topic]['topic_channel'][0]
             try:
               msg = queue.get(block=False, timeout=None)
               print("A message has been received for topic: ", topic)
-              if topic not in self.messages:
-                  self.messages[topic]=[msg]
-              else:
-                  self.messages[topic].append(msg)
-              print(self.messages)                
+              flag, decoded = decrypt_publisher_msg(msg)
+              if flag==1:
+                print("Identity of sender has been verified and message successfully taken")
+                if topic not in self.messages:
+                  self.messages[topic]=[decoded]
+                else:
+                  self.messages[topic].append(decoded)
+                print(self.messages)  
+ 
+
             except Empty:
                 #print('Empty message queue')
                 time.sleep(1)
@@ -121,19 +121,20 @@ def main():
     sub1_AS_thread = AuthenticationServerThread(sub1_server_conn, sub1_client_conn, authentication_manager)
     sub1_AS_thread.start()
     sub.register()
-    sub.subscribe(['topic1', 'topic2'])
+
 
     # create example publisher instance
-    pub = Publisher(pub1_server_conn,pub1_client_conn,"topic2", '0123',"source1", "trusted_keys/trusted1",'trusted_keys')
+    pub = Publisher(pub1_server_conn,pub1_client_conn,"topic1", '0123',"source1", "trusted_keys/trusted1",'trusted_keys')
     # register publisher
     pub1_AS_thread = AuthenticationServerThread(pub1_server_conn, pub1_client_conn, authentication_manager)
     pub1_AS_thread.start()
     print("before publisher registered")
     pub.register()
     print("after publisher registered")
-    # example message from a publisher
+    sub.subscribe(['topic1'])
+
     pub.publish_messeage("Testing")
-    # sub.receive_message('topic1')
+
     sub.receive()
 
 
@@ -141,11 +142,12 @@ def main():
 if __name__ == "__main__":
 
   # Initialization
-  topic_key1 = rsa.newkeys(512)
-  topic_key2 = rsa.newkeys(512)
-  dict1 = {'topic_channel': [], 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
-  dict2 = {'topic_channel': [], 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
-  topic_dict = {'topic1': dict1, 'topic2': dict2}
+  # topic_key1 = rsa.newkeys(512)
+  # topic_key2 = rsa.newkeys(512)
+  # dict1 = {'topic_channel': [], 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
+  # dict2 = {'topic_channel': [], 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
+  # topic_dict = {'topic1': dict1, 'topic2': dict2}
+  topic_dict={}
   (pubkey1, privkey1) = rsa.newkeys(512)  # public key and privkey for source1
   (pubkey2, privkey2) = rsa.newkeys(512)  # public key and privkey for source1
 
