@@ -69,18 +69,18 @@ class Subscriber:
         def decrypt_publisher_msg(encoded_msg):
           # verify the digital signature
           topic_name, cipher, signature = msg
-          publisher_key = topic_dict[topic_name]['publisher']['publisher_key:']
+          publisher_key = self.topic_dict[topic_name]['publisher']['publisher_key:']
           if rsa.verify(cipher, signature, publisher_key)==False:
             return 0, ''
-          session_key = topic_dict[topic_name]['topic_key']
+          session_key = self.topic_dict[topic_name]['topic_key']
           decoded_msg=decrypt_message(cipher, session_key)
           original_msg = decoded_msg.split(b'||')[1]
           # original_msg is a binary string
           return 1, original_msg.decode('ascii')
 
         while True:
-          for topic in topic_dict:
-            queue = topic_dict[topic]['topic_channel'][0]
+          for topic in self.topic_dict:
+            queue = self.topic_dict[topic]['topic_channel']
             try:
               msg = queue.get(block=False, timeout=None)
               print("A message has been received for topic: ", topic)
