@@ -73,7 +73,7 @@ class Publisher:
         code = msg[2]
         if code == 1:
             sub_dict = msg[3]
-            self.msg_q = sub_dict[self.topic_name]['topic_channel']
+            self.msg_q_lst = sub_dict[self.topic_name]['topic_channel']
             self.session_key = sub_dict[self.topic_name]['topic_key']
             print("finished register")
         
@@ -87,9 +87,9 @@ class Publisher:
         cipher = rsa.sign(r, self.sk)
         return cipher
 
-    def receive_registration_info(self,session_key, msg_q_lst):
-        self.session_key = session_key
-        self.msg_q_lst = msg_q_lst
+    # def receive_registration_info(self,session_key, msg_q_lst):
+    #     self.session_key = session_key
+    #     self.msg_q_lst = msg_q_lst
 
     def publish_messeage(self,msg):
         if self.session_key == '':
