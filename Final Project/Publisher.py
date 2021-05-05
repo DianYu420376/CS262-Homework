@@ -98,7 +98,8 @@ class Publisher(threading.Thread):
         if self.session_key == '':
             print("session key is not estabilished and registered, failed to put message in queue")
             return
-        cipher = rsa.encrypt((self.pub_name+"||"+msg).encode(), self.session_key[0])
+        cipher = helpers.encrypt_message((self.pub_name+"||"+msg), self.session_key)
+        
         sig = rsa.sign(cipher, self.sk,'SHA-1')
         for msg_q in self.msg_q_lst:
             msg_q.put_nowait((self.topic_name,cipher,sig))
