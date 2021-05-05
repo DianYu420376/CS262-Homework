@@ -3,7 +3,7 @@ import rsa
 from queue import Queue
 import glob
 from authentication_server import Connection
-from helpers import load_private_key, load_public_key
+import helpers 
 from authentication_server import Connection, AuthenticationManager, AuthenticationServerThread
 import threading
 
@@ -28,7 +28,7 @@ class Publisher(threading.Thread):
         (self.pk, self.sk) = rsa.newkeys(512)
         # self.pk = load_pub_key(pk)
         # self.sk = load_private_key(sk)
-        self.sks = load_private_key(sks)
+        self.sks = helpers.load_private_key(sks)
         self.src_name = src_name
         self.session_key = ''
         self.msg_q_lst = []
@@ -76,8 +76,8 @@ class Publisher(threading.Thread):
         code = msg[2]
         if code == 1:
             sub_dict = msg[3]
-            self.msg_q_lst = sub_dict[self.topic_name]['topic_channel']
-            self.session_key = sub_dict[self.topic_name]['topic_key']
+            self.msg_q_lst = sub_dict['topic_channel']
+            self.session_key = sub_dict['topic_key']
             # print("finished register")
         
 
@@ -107,12 +107,12 @@ class Publisher(threading.Thread):
         trusted_key = []
         for fn in glob.iglob(folder):
             if 'pub1' not in fn:
-                key = load_pub_key(fn)
+                key = helpers.load_pub_key(fn)
                 trusted_key.append(key)
         return trusted_key
 if __name__ == '__main__':
-    source_dict = {'source1': load_public_key("trusted_keys/trusted1.pub"), 'source2': load_public_key("trusted_keys/trusted2.pub"),
-    'source3': load_public_key("trusted_keys/trusted2.pub")}
+    source_dict = {'source1': helpers.load_pub_key("trusted_keys/trusted1.pub"), 'source2': helpers.load_pub_key("trusted_keys/trusted2.pub"),
+    'source3': helpers.load_pub_key("trusted_keys/trusted2.pub")}
     topic_key1 = rsa.newkeys(512)
     topic_key2 = rsa.newkeys(512)
     dict1 = {'topic_channel': Queue(), 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
