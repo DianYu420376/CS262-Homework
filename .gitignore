@@ -2,3 +2,7 @@
 .idea/
 
 Final Project/.vscode/
+
+*.pyc
+
+CS262-Hw2-Clock/__MACOSX/cs262_pa2/__pycache__/

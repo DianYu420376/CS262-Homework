@@ -20,7 +20,7 @@ class Connection(Queue):
                 return msg
             except Empty:
                 #print('Empty message queue')
-                time.sleep(1)
+                # time.sleep(1)
                 continue
 
 
@@ -111,9 +111,10 @@ class AuthenticationServerThread(threading.Thread):
         self.status = UNCERTIFIED
         self.buffer = None
         self.authentication_manager = authentication_manager
+        self.finished = 0
 
     def run(self):
-        while True:
+        while True and not self.finished:
             msg = self.in_conn.recv()
             #print(msg)
             pub_sub_code = msg[0]
@@ -126,6 +127,8 @@ class AuthenticationServerThread(threading.Thread):
                 self.send_topic_key(msg)
             elif action_code == 4:
                 self.server_authentication(msg)
+        print(f'AS for {self.username} ends')
+        
 
         # TODO: what if new publisher joined and the AS need to inform subscribers of that change?
         # if self.status == SIGNED:
@@ -146,6 +149,7 @@ class AuthenticationServerThread(threading.Thread):
         message = machine_id+str(machine_pubkey)+source
         message = message.encode()
         source_pubkey = self.authentication_manager.get_source_key(source)
+        self.username = machine_id
         if not source_pubkey:
             flag = FAILED
             reply = 'Unrecognized Source. Certification has failed.'
@@ -217,6 +221,7 @@ class AuthenticationServerThread(threading.Thread):
             elif pub_sub_code == 0:
                 flag,reply =self.authentication_manager.add_subscriber(machine_certificate, topic_id_lst)
         self.out_conn.send((pub_sub_code, action_code, flag, reply))
+        self.finished = 1
 
     def server_authentication(self, msg): # TODO: Authenticate the server
         pub_sub_code = msg[0]
@@ -232,17 +237,17 @@ class AuthenticationServerThread(threading.Thread):
     # def remove_publisher/ remove_subscriber...
 
 # INITIALIZATION
-sk = ServerSocket()
-topic_key1 = rsa.newkeys(512)
-topic_key2 = rsa.newkeys(512)
-dict1 = {'topic_channel': [], 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
-dict2 = {'topic_channel': [], 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
-topic_dict = {'topic1':dict1, 'topic2':dict2}
-(pubkey1, privkey1) = rsa.newkeys(512) # public key and privkey for source1
-(pubkey2, privkey2) = rsa.newkeys(512) # public key and privkey for source1
+# sk = ServerSocket()
+# topic_key1 = rsa.newkeys(512)
+# topic_key2 = rsa.newkeys(512)
+# dict1 = {'topic_channel': [], 'topic_key': topic_key1, 'publisher': None, 'subscriber_lst': []}
+# dict2 = {'topic_channel': [], 'topic_key': topic_key2, 'publisher': None, 'subscriber_lst': []}
+# topic_dict = {'topic1':dict1, 'topic2':dict2}
+# (pubkey1, privkey1) = rsa.newkeys(512) # public key and privkey for source1
+# (pubkey2, privkey2) = rsa.newkeys(512) # public key and privkey for source1
 
-source_dict = {'source1': pubkey1, 'source2': pubkey2}
-authentication_manager = AuthenticationManager(topic_dict, source_dict)
+# source_dict = {'source1': pubkey1, 'source2': pubkey2}
+# authentication_manager = AuthenticationManager(topic_dict, source_dict)
 
 if __name__ == '__main__':
 # A VERY SIMPLE UNIT TEST
@@ -299,7 +304,6 @@ if __name__ == '__main__':
 
         # Sign the random number and send it back
         msg = client_conn.recv()
-        print(msg)
         flag = msg[2]
         if flag:
             rand_number = msg[3]
@@ -319,7 +323,7 @@ if __name__ == '__main__':
         print(msg)
 
 
-    time.sleep(1)
+    # time.sleep(1)
 
 # ----------------------------------TEST SUBSCRIBER -----------------------------------------
 

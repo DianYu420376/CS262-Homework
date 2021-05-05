@@ -5,8 +5,9 @@ import glob
 from authentication_server import Connection
 from helpers import load_private_key, load_public_key
 from authentication_server import Connection, AuthenticationManager, AuthenticationServerThread
+import threading
 
-class Publisher:
+class Publisher(threading.Thread):
     def __init__(self,server_conn:Connection, client_conn:Connection, topic_name: str,pub_name: str,src_name:str,sks:str,trusted_folder:str):
         """Initiaization of Publisher by taking topic name, publisher's name, filename of publisher's pri/pub1 key
         source's private key
@@ -18,6 +19,7 @@ class Publisher:
             sk (str): private key's filename of publisher
             sks (str): private key's filename of source
         """
+        threading.Thread.__init__(self)
         self.pub_name = pub_name
         self.server_conn = server_conn
         self.client_conn = client_conn
@@ -33,7 +35,9 @@ class Publisher:
         # self.trusted_key_list = load_trusted_key(trusted_folder)
         
         # self.id = id
-
+    def run(self):
+        self.register()
+        self.publish_messeage(f"{self.pub_name} test publishing")
     def load_private_key(self,key_fn):
         with open(key_fn, mode='rb') as privatefile:
             keydata = privatefile.read()
@@ -54,14 +58,13 @@ class Publisher:
         msg = self.client_conn.recv()
         flag = msg[2]
         pub_sub_code = 1 # This is a publisher
-        if flag:
+        if flag == 1:
             rand_number = msg[3]
             signature = rsa.sign(rand_number, self.sk, 'SHA-1')
             action_code = 2
             msg = (pub_sub_code, action_code, signature)
             self.server_conn.send(msg)
             msg = self.client_conn.recv()
-            print(msg)
         else:
             print("Publisher register failed")
         #Registration finished, send the topic info
@@ -75,7 +78,7 @@ class Publisher:
             sub_dict = msg[3]
             self.msg_q_lst = sub_dict[self.topic_name]['topic_channel']
             self.session_key = sub_dict[self.topic_name]['topic_key']
-            print("finished register")
+            # print("finished register")
         
 
     def generate_certificate(self):

@@ -4,6 +4,7 @@ from Publisher import Publisher
 import rsa
 from queue import Queue
 from helpers import load_private_key, load_public_key
+import time
 
 
 # -------------- Creating three topics ---------------------------------------------------------------
@@ -25,6 +26,7 @@ pub1_client_conn = Connection()
 pub1_server_conn = Connection()
 pub1 = Publisher(pub1_server_conn, pub1_client_conn, "topic1", 'publisher1', "source1", "trusted_keys/trusted1", 'trusted_keys')
 
+
 pub2_client_conn = Connection()
 pub2_server_conn = Connection()
 pub2 = Publisher(pub2_server_conn, pub2_client_conn, "topic2", 'publisher2', "source2", "trusted_keys/trusted2", 'trusted_keys')
@@ -36,18 +38,26 @@ pub3 = Publisher(pub3_server_conn, pub3_client_conn, "topic3", 'publisher3', "so
 
 pub1_AS_thread = AuthenticationServerThread(pub1_server_conn, pub1_client_conn, authentication_manager)
 pub1_AS_thread.start()
-pub1.register()
-pub1.publish_messeage("Publisher1 Testing")
+pub1.start()
+
+# pub1.register()
+# pub1.publish_messeage("Publisher1 Testing")
 
 pub2_AS_thread = AuthenticationServerThread(pub2_server_conn, pub2_client_conn, authentication_manager)
 pub2_AS_thread.start()
-pub2.register()
-pub2.publish_messeage("Publisher2 Testing")
+pub2.start()
+# pub2.register()
+# pub2.publish_messeage("Publisher2 Testing")
 
 pub3_AS_thread = AuthenticationServerThread(pub3_server_conn, pub3_client_conn, authentication_manager)
 pub3_AS_thread.start()
-pub3.register()
-pub3.publish_messeage("Publisher3 Testing")
+# pub3.register()
+# pub3.publish_messeage("Publisher3 Testing")
+pub3.start()
+
+pub1.join()
+pub2.join()
+pub3.join()
 
 # ------------------------------- Subscribers ------------------------------------------------
 # Under construction
