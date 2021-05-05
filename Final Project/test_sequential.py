@@ -8,7 +8,7 @@ from helpers import load_private_key, load_public_key
 
 # -------------- Creating three topics ---------------------------------------------------------------
 source_dict = {'source1': load_public_key("trusted_keys/trusted1.pub"), 'source2': load_public_key("trusted_keys/trusted2.pub"),
-    'source3': load_public_key("trusted_keys/trusted2.pub")}
+    'source3': load_public_key("trusted_keys/trusted3.pub")}
 topic_key1 = rsa.newkeys(512)
 topic_key2 = rsa.newkeys(512)
 topic_key3 = rsa.newkeys(512)
