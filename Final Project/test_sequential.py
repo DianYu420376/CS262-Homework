@@ -75,18 +75,29 @@ sub3 = Subscriber('subscriber3',"source3","trusted_keys/trusted3", "trusted_keys
 
 sub1_AS_thread = AuthenticationServerThread(sub1_server_conn, sub1_client_conn, authentication_manager)
 sub1_AS_thread.start()
-sub1.register()
-sub1.subscribe(['topic1'])
+
+# sub1.register()
+# sub1.subscribe(['topic1'])
 
 sub2_AS_thread = AuthenticationServerThread(sub2_server_conn, sub2_client_conn, authentication_manager)
 sub2_AS_thread.start()
-sub2.register()
-sub2.subscribe(['topic2'])
+# sub2.register()
+# sub2.subscribe(['topic2'])
 
 sub3_AS_thread = AuthenticationServerThread(sub3_server_conn, sub3_client_conn, authentication_manager)
 sub3_AS_thread.start()
-sub3.register()
-sub3.subscribe(['topic3'])
+# sub3.register()
+# sub3.subscribe(['topic3'])
+
+sub1.start()
+sub2.start()
+sub3.start()
+time.sleep(1)
+
+sub1.subscribe(['topic1', 'topic2', 'topic3'])
+sub2.subscribe(['topic1', 'topic2', 'topic3'])
+sub3.subscribe(['topic1', 'topic2', 'topic3'])
+
 
 pub1.publish_messeage("Publisher1 Testing")
 pub2.publish_messeage("Publisher2 Testing")
