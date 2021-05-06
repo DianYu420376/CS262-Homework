@@ -1,9 +1,9 @@
 from authentication_server import Connection, AuthenticationServerThread, AuthenticationManager
-from subscriber import Subscriber
-from Publisher import Publisher
+from subscriber_windows import Subscriber
+from Publisher_windows import Publisher
 import rsa
 from queue import Queue
-from helpers import load_private_key, load_public_key
+from helpers_windows import load_private_key, load_public_key
 import time
 
 
@@ -75,19 +75,25 @@ sub3 = Subscriber('subscriber3',"source3","trusted_keys/trusted3", "trusted_keys
 
 sub1_AS_thread = AuthenticationServerThread(sub1_server_conn, sub1_client_conn, authentication_manager)
 sub1_AS_thread.start()
-sub1.register()
-sub1.subscribe(['topic1'])
+sub1.start()
+sub1.onThread(sub1.subscribe, ['topic1'])
 
 sub2_AS_thread = AuthenticationServerThread(sub2_server_conn, sub2_client_conn, authentication_manager)
 sub2_AS_thread.start()
-sub2.register()
-sub2.subscribe(['topic2'])
+sub2.start()
+#sub2.join()
+sub2.onThread(sub1.subscribe, ['topic2'])
 
 sub3_AS_thread = AuthenticationServerThread(sub3_server_conn, sub3_client_conn, authentication_manager)
 sub3_AS_thread.start()
-sub3.register()
+sub3.start()
+#sub3.join()
 sub3.subscribe(['topic3'])
 
 pub1.publish_messeage("Publisher1 Testing")
 pub2.publish_messeage("Publisher2 Testing")
 pub3.publish_messeage("Publisher3 Testing")
+
+#sub1.receive()
+sub2.receive()
+sub3.receive()

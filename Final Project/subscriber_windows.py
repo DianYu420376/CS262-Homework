@@ -2,12 +2,15 @@ from authentication_server import Connection, AuthenticationManager, Authenticat
 from queue import Queue, Empty
 import rsa
 import os
-from helpers import load_private_key, load_public_key, decrypt_message
-from Publisher import Publisher
+from helpers_windows import load_private_key, load_public_key, decrypt_message
+from Publisher_windows import Publisher
 import time
+import threading
 
-class Subscriber:
+
+class Subscriber(threading.Thread):
     def __init__(self, sub_name: str,src_name: str, sks:str, trusted_folder:str, client_conn, server_conn):
+        threading.Thread.__init__(self)
         self.sub_name = sub_name
         self.pk, self.sk = rsa.newkeys(512)
         self.sks = load_private_key(sks)
@@ -20,7 +23,21 @@ class Subscriber:
                             # with keys 'publisher', 'topic_key','topic_sk', 'topic_channel'
                             # publisher is also a dictionary  {'publisher_name': publisher_certificate[0], 'publisher_key:': publisher_certificate[1]}
         self.messages={}  # stores the messages received in form of a dictionary 
-                          # with topic_id being key and list of messages being value                    
+                          # with topic_id being key and list of messages being value
+        self.command_q = Queue()
+
+    def onThread(self, function, *args, **kwargs):
+        self.command_q.put_nowait((function, args, kwargs))
+
+    def run(self):
+        self.register()
+        while True:
+            try:
+                function, args, kwargs = self.command_q.get(timeout=None)
+                function(*args, **kwargs)
+            except Empty:
+                self.receive()
+                time.sleep(1)
 
     #TODO write error messages at different steps
     def register(self):
@@ -68,36 +85,34 @@ class Subscriber:
         # decrypts the message and returns the decoded message
         def decrypt_publisher_msg(encoded_msg):
           # verify the digital signature
-          topic_name, cipher, signature = msg
+          topic_name, cipher, nonce, signature = msg
           publisher_key = self.topic_dict[topic_name]['publisher']['publisher_key:']
           if rsa.verify(cipher, signature, publisher_key)==False:
             return 0, ''
           session_key = self.topic_dict[topic_name]['topic_key']
-          decoded_msg=decrypt_message(cipher, session_key)
-          original_msg = decoded_msg.split(b'||')[1]
+          decoded_msg=decrypt_message(cipher, nonce, session_key)
+          original_msg = decoded_msg.split('||')[1]
           # original_msg is a binary string
-          return 1, original_msg.decode('ascii')
+          return 1, original_msg
 
-        while True:
-          for topic in self.topic_dict:
+        for topic in self.topic_dict:
             queue = self.topic_dict[topic]['topic_channel']
-            try:
-              msg = queue.get(block=False, timeout=None)
-              print("A message has been received for topic: ", topic)
-              flag, decoded = decrypt_publisher_msg(msg)
-              if flag==1:
+        try:
+            msg = queue.get(block=False, timeout=None)
+            print("A message has been received for topic: ", topic)
+            flag, decoded = decrypt_publisher_msg(msg)
+            if flag==1:
                 print("Identity of sender has been verified and message successfully taken")
-                if topic not in self.messages:
-                  self.messages[topic]=[decoded]
-                else:
-                  self.messages[topic].append(decoded)
-                print(self.messages)  
- 
+            if topic not in self.messages:
+                self.messages[topic]=[decoded]
+            else:
+                self.messages[topic].append(decoded)
+            print(self.messages)
 
-            except Empty:
-                #print('Empty message queue')
-                time.sleep(1)
-                continue
+
+        except Empty:
+            #print('Empty message queue')
+            pass
 
 
         

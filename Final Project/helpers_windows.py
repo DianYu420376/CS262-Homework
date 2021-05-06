@@ -31,27 +31,28 @@ def encrypt_message(private_msg, encoded_secret_key, padding_character='{'):
 	# decode the encoded secret key
 	secret_key = base64.b64decode(encoded_secret_key)
 	# use the decoded secret key to create a AES cipher
-	cipher = AES.new(secret_key)
+	cipher = AES.new(secret_key,mode=AES.MODE_EAX)
+	nonce = cipher.nonce
 	# pad the private_msg
 	# because AES encryption requires the length of the msg to be a multiple of 16
 	padded_private_msg = private_msg + (padding_character * ((16-len(private_msg)) % 16))
 	# use the cipher to encrypt the padded message
-	encrypted_msg = cipher.encrypt(padded_private_msg)
+	encrypted_msg = cipher.encrypt(padded_private_msg.encode())
 	# encode the encrypted msg for storing safely in the database
 	encoded_encrypted_msg = base64.b64encode(encrypted_msg)
 	# return encoded encrypted message
-	return encoded_encrypted_msg
+	return encoded_encrypted_msg, nonce
 
-def decrypt_message(encoded_encrypted_msg, encoded_secret_key, padding_character=b'{'):
+def decrypt_message(encoded_encrypted_msg, nonce, encoded_secret_key, padding_character=b'{'):
 	# decode the encoded encrypted message and encoded secret key
 	secret_key = base64.b64decode(encoded_secret_key)
 	encrypted_msg = base64.b64decode(encoded_encrypted_msg)
 	# use the decoded secret key to create a AES cipher
-	cipher = AES.new(secret_key)
+	cipher = AES.new(secret_key, mode=AES.MODE_EAX, nonce=nonce)
 	# use the cipher to decrypt the encrypted message
-	decrypted_msg = cipher.decrypt(encrypted_msg)
+	decrypted_msg = cipher.decrypt(encrypted_msg).decode()
 	# unpad the encrypted message
-	unpadded_private_msg = decrypted_msg.rstrip(padding_character)
+	unpadded_private_msg = decrypted_msg.rstrip(padding_character.decode())
 	# return a decrypted original private message
 	return unpadded_private_msg
 padding_character = '{'
