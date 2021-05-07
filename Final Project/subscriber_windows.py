@@ -24,20 +24,14 @@ class Subscriber(threading.Thread):
                             # publisher is also a dictionary  {'publisher_name': publisher_certificate[0], 'publisher_key:': publisher_certificate[1]}
         self.messages={}  # stores the messages received in form of a dictionary 
                           # with topic_id being key and list of messages being value
-        self.command_q = Queue()
+        #self.command_q = Queue()
 
-    def onThread(self, function, *args, **kwargs):
-        self.command_q.put_nowait((function, args, kwargs))
+    #def onThread(self, function, *args, **kwargs):
+    #    self.command_q.put_nowait((function, args, kwargs))
 
     def run(self):
         self.register()
-        while True:
-            try:
-                function, args, kwargs = self.command_q.get(timeout=None)
-                function(*args, **kwargs)
-            except Empty:
-                self.receive()
-                time.sleep(1)
+        self.receive()
 
     #TODO write error messages at different steps
     def register(self):
@@ -81,7 +75,7 @@ class Subscriber(threading.Thread):
 
   
     def receive(self):
-
+        print('START RECEIVE FUNCTION')
         # decrypts the message and returns the decoded message
         def decrypt_publisher_msg(encoded_msg):
           # verify the digital signature
@@ -95,24 +89,26 @@ class Subscriber(threading.Thread):
           # original_msg is a binary string
           return 1, original_msg
 
-        for topic in self.topic_dict:
-            queue = self.topic_dict[topic]['topic_channel']
-        try:
-            msg = queue.get(block=False, timeout=None)
-            print("A message has been received for topic: ", topic)
-            flag, decoded = decrypt_publisher_msg(msg)
-            if flag==1:
-                print("Identity of sender has been verified and message successfully taken")
-            if topic not in self.messages:
-                self.messages[topic]=[decoded]
-            else:
-                self.messages[topic].append(decoded)
-            print(self.messages)
+        while True:
+            for topic in self.topic_dict:
+                queue = self.topic_dict[topic]['topic_channel']
+                try:
+                    msg = queue.get(block=False, timeout=None)
+                    print("A message has been received for topic: ", topic)
+                    flag, decoded = decrypt_publisher_msg(msg)
+                    if flag==1:
+                        print("Identity of sender has been verified and message successfully taken")
+                    if topic not in self.messages:
+                        self.messages[topic]=[decoded]
+                    else:
+                        self.messages[topic].append(decoded)
+                    print(self.messages)
 
 
-        except Empty:
-            #print('Empty message queue')
-            pass
+                except Empty:
+                    #print('Empty message queue')
+                    time.sleep(1)
+                    continue
 
 
         
