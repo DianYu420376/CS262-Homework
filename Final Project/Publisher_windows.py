@@ -1,13 +1,17 @@
 
 import rsa
-from queue import Queue
+# from queue import Queue
+from multiprocessing import Queue
 import glob
 from authentication_server import Connection
 import helpers_windows
 from authentication_server import Connection, AuthenticationManager, AuthenticationServerThread
 import threading
+from multiprocessing import Process, Manager
+import random
+from time import sleep
 
-class Publisher(threading.Thread):
+class Publisher(Process):
     def __init__(self,server_conn:Connection, client_conn:Connection, topic_name: str,pub_name: str,src_name:str,sks:str,trusted_folder:str):
         """Initiaization of Publisher by taking topic name, publisher's name, filename of publisher's pri/pub1 key
         source's private key
@@ -19,7 +23,8 @@ class Publisher(threading.Thread):
             sk (str): private key's filename of publisher
             sks (str): private key's filename of source
         """
-        threading.Thread.__init__(self)
+        # threading.Thread.__init__(self)
+        super(Publisher, self).__init__()
         self.pub_name = pub_name
         self.server_conn = server_conn
         self.client_conn = client_conn
@@ -36,8 +41,9 @@ class Publisher(threading.Thread):
         
         # self.id = id
     def run(self):
+        # sleep(random.random()/2)
         self.register()
-        self.publish_messeage(f"{self.pub_name} test publishing")
+        # self.publish_messeage(f"{self.pub_name} test publishing")
     def load_private_key(self,key_fn):
         with open(key_fn, mode='rb') as privatefile:
             keydata = privatefile.read()

@@ -1,4 +1,9 @@
-from queue import Queue, Empty
+# from queue import Queue, Empty
+from multiprocessing.queues import Queue
+import multiprocessing as mp
+# import multiprocessing.queues.Queue
+from multiprocessing import Process, Manager
+
 # import socket
 import threading
 # from enum import Enum
@@ -12,14 +17,16 @@ import helpers
 
 class Connection(Queue):
     def __init__(self):
-        super().__init__()
+        # super().__init__()
+        ctx = mp.get_context()
+        super(Connection, self).__init__(ctx=ctx)
 
     def recv(self, block=False, timeout=None):
         while True:
             try:
                 msg = self.get(block=block, timeout=timeout)
                 return msg
-            except Empty:
+            except mp.queues.Empty:
                 #print('Empty message queue')
                 # time.sleep(1)
                 continue
@@ -111,9 +118,10 @@ class AuthenticationManager():
         return self.source_dict.get(source)
 
 
-class AuthenticationServerThread(threading.Thread):
+class AuthenticationServerThread(Process):
     def __init__(self, server_conn, client_conn, authentication_manager):
-        threading.Thread.__init__(self)
+        # threading.Thread.__init__(self)
+        super(AuthenticationServerThread, self).__init__()
         self.in_conn = server_conn
         self.out_conn = client_conn
         self.username = ''

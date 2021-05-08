@@ -107,7 +107,7 @@ class Subscriber(threading.Thread):
 
                 except Empty:
                     #print('Empty message queue')
-                    time.sleep(1)
+                    # time.sleep(0.01)
                     continue
 
 
@@ -115,12 +115,6 @@ class Subscriber(threading.Thread):
 
       
       
-
-
-
-
-
-
 
 def main(): 
     sub1_client_conn = Connection()
